@@ -1,7 +1,6 @@
 // Dependencies
 const { GlobalBanSchema } = require('../database/models'),
 	{ MessageEmbed, Collection } = require('discord.js'),
-	moment = require('moment'),
 	Event = require('../structures/Event');
 
 module.exports = class Message extends Event {
@@ -23,45 +22,45 @@ module.exports = class Message extends Event {
 				.setThumbnail(bot.user.displayAvatarURL({ format: 'png' }))
 				.setDescription([
 					`Hello, my name is ${bot.user.username}, and I'm a multi-purpose Discord bot, built to help you with all of your server problems and needs.`,
-					`I've been online for ${moment.duration(bot.uptime).format('d[d] h[h] m[m] s[s]')}, helping ${bot.guilds.cache.size} servers and ${bot.users.cache.size} users with ${bot.commands.size} commands.`,
+					`I've been online for ${bot.timeFormatter.getReadableTime(bot.uptime)}, helping ${bot.guilds.cache.size} servers and ${bot.users.cache.size} users with ${bot.commands.size} commands.`,
 				].join('\n\n'))
 				.addField('Useful Links:', [
-					`[Add to server](https://discordapp.com/api/oauth2/authorize?client_id=${bot.user.id}&permissions=8&scope=bot)`,
+					`[Add to server](${bot.config.inviteLink})`,
 					`[Join support server](${bot.config.SupportServer.link})`,
 					`[Website](${bot.config.websiteURL})`,
 				].join('\n'));
 			return message.channel.send(embed).catch(err => bot.logger.error(`Event: 'message' has error: ${err.message}.`));
 		}
-		
-// Verification Process for SupportServer
+
+		// Verification Process for SupportServer
 		if ((message.content.toLowerCase() === 'verify') && message.channel.id === bot.config.SupportServer.VerifyChannel) {
-			if (!message.channel.permissionsFor(message.guild.me).serialize().SEND_MESSAGES) return console.error("The bot doesn't have the permission to send messages.\nRequired permission: SEND_MESSAGES");
+			if (!message.channel.permissionsFor(message.guild.me).serialize().SEND_MESSAGES) return console.error('The bot doesn\'t have the permission to send messages.\nRequired permission: SEND_MESSAGES');
 			if (!message.channel.permissionsFor(message.guild.me).serialize().ADD_REACTIONS) {
-				console.error("The bot doesn't have the permission to add reactions.\nRequired permission: `ADD_REACTIONS`");
-				message.channel.send("The bot doesn't have the permission to add reactions.\nRequired permission: `ADD_REACTIONS`")
+				console.error('The bot doesn\'t have the permission to add reactions.\nRequired permission: `ADD_REACTIONS`');
+				message.channel.send('The bot doesn\'t have the permission to add reactions.\nRequired permission: `ADD_REACTIONS`')
 					.then(m => m.delete({ timeout: 20000 }));
 				return;
 			}
 			if (!message.channel.permissionsFor(message.guild.me).serialize().MANAGE_MESSAGES) {
-				console.error("The bot doesn't have the permission to delete messages.\nRequired permission: `MANAGE_MESSAGES`");
-				message.channel.send("The bot doesn't have the permission to delete messages.\nRequired permission: `MANAGE_MESSAGES`")
+				console.error('The bot doesn\'t have the permission to delete messages.\nRequired permission: `MANAGE_MESSAGES`');
+				message.channel.send('The bot doesn\'t have the permission to delete messages.\nRequired permission: `MANAGE_MESSAGES`')
 					.then(m => m.delete({ timeout: 20000 }));
 				return;
 			}
 			const messageRole = message.guild.roles.cache.find(role => role.id === bot.config.SupportServer.VerifyRole);
 			if (messageRole == null) return;
-			if (!message.guild.me.hasPermission("MANAGE_ROLES")) {
-				message.channel.send("The bot doesn't have the permission required to assign roles.\nRequired permission: `MANAGE_ROLES`")
+			if (!message.guild.me.hasPermission('MANAGE_ROLES')) {
+				message.channel.send('The bot doesn\'t have the permission required to assign roles.\nRequired permission: `MANAGE_ROLES`')
 					.then(m => m.delete({ timeout: 20000 }));
 				return;
 			}
 			if (message.guild.me.roles.highest.comparePositionTo(messageRole) < 1) {
-				message.channel.send("The position of this role is higher than the bot's highest role, it cannot be assigned by the bot.")
+				message.channel.send('The position of this role is higher than the bot\'s highest role, it cannot be assigned by the bot.')
 					.then(m => m.delete({ timeout: 20000 }));
 				return;
 			}
 			if (messageRole.managed == true) {
-				message.channel.send("This is an auto managed role, it cannot be assigned.")
+				message.channel.send('This is an auto managed role, it cannot be assigned.')
 					.then(m => m.delete({ timeout: 20000 }));
 				return;
 			}
@@ -69,7 +68,7 @@ module.exports = class Message extends Event {
 				message.channel.send(`You already have <@&${bot.config.SupportServer.VerifyRole}> role`)
 					.then(m => m.delete({ timeout: 5000 }));
 			}
-			message.react("<a:tick:818394472563605554>");
+			message.react('<a:tick:818394472563605554>');
 			message.member.roles.add(messageRole)
 				.then(() => message.delete({ timeout: 5000 }))
 				.catch(error => {
@@ -80,10 +79,10 @@ module.exports = class Message extends Event {
 		}
 		if ((message.content.toLowerCase() != 'verify') && message.channel.id === bot.config.SupportServer.VerifyChannel) {
 			// Delete message
-			message.react("<a:cross:818394472224260118>")
+			message.react('<a:cross:818394472224260118>')
 				.then(() => message.delete({ timeout : 5000 }));
 			message.channel.send('No, msg are allowed in this channel to get verify send message `verify` so that yo can verify')
-			.then(m => m.delete({ timeout: 5000 }));
+				.then(m => m.delete({ timeout: 5000 }));
 		}
 
 		// Check if the message was @someone

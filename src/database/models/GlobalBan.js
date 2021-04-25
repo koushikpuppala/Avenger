@@ -1,10 +1,18 @@
 const { Schema, model } = require('mongoose');
 
 const globalBanSchema = Schema({
-	userID: String,
-	reason: String,
-	IssueDate: String,
-	restriction: String,
+	userID: {
+		type: String,
+	},
+	reason: {
+		type: String,
+	},
+	IssueDate: {
+		type: String,
+	},
+	restriction: {
+		type: String,
+	},
 });
 
 module.exports = model('GlobalBan', globalBanSchema);

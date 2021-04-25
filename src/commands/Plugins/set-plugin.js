@@ -1,5 +1,5 @@
 // Dependecies
-const defaultPlugins = ['BotDev', 'Fun', 'Giveaway', 'Guild', 'Host', 'Image', 'Invite', 'Level', 'Misc', 'Moderation', 'Music', 'NSFW', 'Plugins', 'Recording', 'Searcher', 'Ticket', 'Utils'],
+const defaultPlugins = ['Animals', 'BotDevelopers', 'Fun', 'Games', 'Giveaway', 'Guild', 'Host', 'Image', 'Invites', 'Level', 'Misc', 'Moderation', 'Music', 'NSFW', 'Plugins', 'Reactions', 'Reminders', 'Recording', 'Searcher', 'Ticket', 'Utils'],
 	Command = require('../../structures/Command.js');
 
 module.exports = class SetPlugin extends Command {

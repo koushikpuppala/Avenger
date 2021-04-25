@@ -17,6 +17,6 @@ module.exports = class Privacy extends Command {
 	// Run command
 	async run(bot, message, settings) {
 		// Send link to privacy policy
-		message.channel.send({ embed:{ description:`[${bot.translate(settings.Language, 'MISC/PRIVACY_POLICY')}](https://github.com/Discord-Avengers-Assemble-Server/Avengers-Assemble/blob/Avengers-Assemble/docs/PRIVACY.md)` } });
+		message.channel.send({ embed:{ description:`[${bot.translate(settings.Language, 'MISC/PRIVACY_POLICY')}](https://github.com/puppala-koushik/Avenger/blob/Avenger/docs/PRIVACY.md)` } });
 	}
 };

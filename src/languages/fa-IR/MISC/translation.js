@@ -14,7 +14,7 @@ const languageData = {
 	STATUS_CLIENT: 'Client API:',
 	STATUS_MONGO: 'MongoDB:',
 	SUPPORT_TITLE: (username) => `${username} support`,
-	SUPPORT_DESC: (websites) => `**Our Server:**  [Support Server](${websites[0]})\n **Our website:**  [Website](${websites[1]})`,
+	SUPPORT_DESC: (websites) => `**Our Server:**  [Support Server](${websites[0]})\n **Our website:**  [Website](${websites[1]})\n **Git Repo:** [Website](https://github.com/puppala-koushik/Avenger)`,
 };
 
 const translate = (key, args) => {

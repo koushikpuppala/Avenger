@@ -1,16 +1,36 @@
 const { Schema, model } = require('mongoose');
 
 const giveawaySchema = Schema({
-	messageID: String,
-	channelID: String,
-	guildID: String,
-	startAt: Number,
-	endAt: Number,
-	ended: Boolean,
-	winnerCount: Number,
-	winners: Array,
-	prize: String,
-	hostedBy: String,
+	messageID: {
+		type: String,
+	},
+	channelID: {
+		type: String,
+	},
+	guildID: {
+		type: String,
+	},
+	startAt: {
+		type: Number,
+	},
+	endAt: {
+		type: Number,
+	},
+	ended: {
+		type: Boolean,
+	},
+	winnerCount: {
+		type: Number,
+	},
+	winners: {
+		type: Array,
+	},
+	prize: {
+		type: String,
+	},
+	hostedBy: {
+		type: String,
+	},
 	messages: Schema.Types.Mixed,
 });
 

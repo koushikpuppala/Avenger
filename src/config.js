@@ -5,6 +5,7 @@ const config = {
 	botClient: process.env.CLIENT_ID,
 	botClientSecret: process.env.CLIENT_SECRET,
 	botClientRedirect: process.env.CLIENT_REDIRECT,
+	inviteLink: process.env.INVITELINK,
 	// Lavalink connections
 	LavaHost: process.env.LAVA_HOST,
 	LavaPort: process.env.LAVA_PORT,

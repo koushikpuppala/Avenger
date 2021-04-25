@@ -14,7 +14,7 @@ module.exports = async (bot) => {
 		// check each event
 		for (let i = 0; i < events.length; i++) {
 			// get settings for the guild
-			const settings = bot.guilds.cache.get(events[i].guildID)?.settings;
+			const settings = bot.guilds.cache.get(events[i].guildID).settings;
 
 			// check if current time is 'older' then event time.
 			if (new Date() >= new Date(events[i].time)) {
@@ -86,7 +86,7 @@ module.exports = async (bot) => {
 					}, async (err, res) => {
 						if (err) {
 							bot.logger.error(`Error: ${err.message} fetching warns. (timed events)`);
-							return bot.channels.cache.get(events[i].channelID)?.error(settings.Language, 'ERROR_MESSAGE', err.message).then(m => m.delete({ timeout: 5000 }));
+							return bot.channels.cache.get(events[i].channelID).error(settings.Language, 'ERROR_MESSAGE', err.message).then(m => m.delete({ timeout: 5000 }));
 						}
 
 						// find the timed warning

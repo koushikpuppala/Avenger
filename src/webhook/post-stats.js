@@ -1,10 +1,12 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable no-inline-comments */
 // Dependencies
 const logger = require('../utils/logger'),
 	AutoPoster = require('topgg-autoposter'),
 	BoatsClient = require('boats.js'),
 	BotList = require('botlist.space'),
 	fetch = require('node-fetch'),
-	BBL = require("bbl-api");;
+	BBL = require('bbl-api');
 
 module.exports = bot => {
 
@@ -22,13 +24,13 @@ module.exports = bot => {
 	const SERVER_COUNT = bot.guilds.cache.size;
 
 	Boats.postStats(SERVER_COUNT, `${bot.config.botClient}`).then(() => {
-    	logger.posted('Successfully updated server count on DiscordBoat.');
+		logger.posted('Successfully updated server count on DiscordBoat.');
 	}).catch(err => {
-	    logger.error(err);
+		logger.error(err);
 	});
 
 	// Post Server Count to Discordlists100.xyz!
-	
+
 	const requestOptions = {
 		method: 'POST',
 		headers: {
@@ -46,38 +48,38 @@ module.exports = bot => {
 		.catch(console.error);
 
 	// Post Server Count to botlist.space
- 
+
 	const BotListclient = new BotList.Client({ id: `${bot.config.botClient}`, botToken: `${bot.config.DiscordBotLists.BotlistspaceAPI_Key}` });
 
 	BotListclient.postServerCount(SERVER_COUNT)
-		.then((bot) => {
-			logger.posted('Successfully updated server count on Botlist.')
+		.then((_bot) => {
+			logger.posted('Successfully updated server count on Botlist.');
 		}).catch((error) => {
-			logger.error(error)
+			logger.error(error);
 		});
 
 	// Post Server Count to bladebotlist
 
 	const BBLclient = new BBL(
-    	`${bot.config.botClient}`, // BOT_ID
-	    `${bot.config.DiscordBotLists.BladebotlistAPI_Key}`, // API_KEY, use bbl!key gen on the discord server
-	    {
-    	    server_count: `${bot.guilds.cache.size}`,
-        	interval: 300000,
-	    });
- 
- 
-	BBLclient.on("ready", () => logger.ready("Client is started !")); // when the module is loaded and ready to post data
+		`${bot.config.botClient}`, // BOT_ID
+		`${bot.config.DiscordBotLists.BladebotlistAPI_Key}`, // API_KEY, use bbl!key gen on the discord server
+		{
+			server_count: `${bot.guilds.cache.size}`,
+			interval: 300000,
+		});
 
-	BBLclient.on("debug", (log) => logger.log(log))
- 
-	BBLclient.on("update", () => logger.posted("Stats updated !")); // autopost or manual post
- 
-	BBLclient.on("error", (error) => logger.error(`Something was wrong when the module has posted stats: ${error}`)); // complete reports about errors like invalid api key or bot id
+
+	BBLclient.on('ready', () => logger.ready('Client is started !')); // when the module is loaded and ready to post data
+
+	BBLclient.on('debug', (log) => logger.log(log));
+
+	BBLclient.on('update', () => logger.posted('Stats updated !')); // autopost or manual post
+
+	BBLclient.on('error', (error) => logger.error(`Something was wrong when the module has posted stats: ${error}`)); // complete reports about errors like invalid api key or bot id
 
 
 	// Post Server Count to Botsfordiscord.com!
-	
+
 	const BODrequestOptions = {
 		method: 'POST',
 		headers: {

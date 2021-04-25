@@ -11,7 +11,7 @@ module.exports = class Server extends Command {
 			dirname: __dirname,
 			aliases: ['serverlist'],
 			botPermissions: [ 'SEND_MESSAGES', 'EMBED_LINKS'],
-			description: 'Displays a list of Ironman joined servers.',
+			description: 'Displays a list of Avenger joined servers.',
 			usage: 'server',
 			cooldown: 3000,
 			examples: ['server'],

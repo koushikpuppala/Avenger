@@ -1,6 +1,6 @@
 // Dependecies
 const Command = require('../../structures/Command.js'),
-	{ ReactionRoleSchema } = require('../../database/models');
+	{ ReactionRoleSchema } = require('../../database/models/ReactionRole');
 
 module.exports = class Rrremove extends Command {
 	constructor(bot) {
@@ -19,7 +19,7 @@ module.exports = class Rrremove extends Command {
 
 	// Run command
 	async run(bot, message, settings) {
-		const [messageId] = message.args;
+		const messageId = message.args[0];
 
 		if (!messageId) {
 			return message.channel.error(settings.Language, 'INCORRECT_FORMAT', settings.prefix.concat(this.help.usage)).then(m => m.delete({ timeout: 5000 }));
