@@ -1,0 +1,52 @@
+<%- include('Connections/Header') -%>
+    <%- include('Connections/Navbar') -%>
+        <!-- ======= Hero Section ======= -->
+        <section id="hero" style="background: url(../img/avengers.webp) center center no-repeat; background-size: contain;">
+            <div class="hero-container" data-aos="zoom-in" data-aos-delay="100">
+                <h1>Welcome
+                    <%= username %> <br /> to Avengers Bot page
+                </h1>
+                <span>
+                        <a href="https://discord.com/oauth2/authorize?client_id=775412494235729960&permissions=2088762486&redirect_uri=https%3A%2F%2Fdiscord.gg%2FMsJ99j5Bcv&response_type=code&scope=bot%20guilds.join%20connections%20identify"
+                            class="btn-get-started">Bot Invite</a>
+                        <a href="https://top.gg/bot/775412494235729960" class="btn-get-started">Vote Bot</a>
+                    </span>
+                <a href="/avenger/commands" class="btn-grad">Commands</a>
+            </div>
+        </section>
+        <!-- End Hero Section -->
+
+        <!-- ======= Avenger Section ======= -->
+        <section id="avenger">
+            <div class="container" data-aos="fade-up">
+                <div class="row about-container">
+
+                    <div class="col-lg-6 content order-lg-1 order-2">
+                        <h3 class="title">Few Words About <strong>Avenger Bot</strong></h3>
+                        <h4>
+                            Hello friends, This bot is having 100+ commands and still under development.<br /> This bot is having Social, Leveling, Economy, and Fun are there in this bot until now in the future I am going to add Giveaways, Moderation,
+                            Reaction Roles, and few music commands which will this bot universal for everything.
+                            <br /> In this bot also there is a premium role but it will not stop any commands but when we use leveling, Economy, and Social we get points and when using some commands like Fun, Games these points are consumed for using
+                            the command.
+                        </h4>
+
+                        <span>
+                                <a href="https://discord.com/oauth2/authorize?client_id=775412494235729960&permissions=2088762486&redirect_uri=https%3A%2F%2Fdiscord.gg%2FMsJ99j5Bcv&response_type=code&scope=bot%20guilds.join%20connections%20identify"
+                                    target="_blank" class="btn-get-started">Invite Bot</a>
+                                <a href="https://top.gg/bot/775412494235729960" target="_blank"
+                                    class="btn-get-started">Vote
+                                    Bot</a>
+                                <a href="/avenger/commands" class="btn-get-started">Bot Commands</a>
+                            </span>
+
+                    </div>
+
+                    <div class="col-lg-6 background order-lg-2 order-1" data-aos="fade-left" data-aos-delay="100">
+                    </div>
+                </div>
+
+            </div>
+        </section>
+        <!-- End Avengers Section -->
+
+        <%- include('Connections/Footer') -%>

@@ -1,0 +1,64 @@
+<!-- ======= Header ======= -->
+<header id="header" class="fixed-top d-flex align-items-center header-transparent">
+    <div class="container d-flex justify-content-between align-items-center">
+
+        <div id="logo">
+            <h1><a href="<%= HOME %>"><img style="width:10%; border-image-repeat: round; border-radius: 100%;"
+                        src="https://cdn.discordapp.com/avatars/<%= discordId %>/<%= avatar %>"
+                        alt="<%= username %>">&nbsp;<%= username %></a></h1>
+        </div>
+
+        <nav id="navbar" class="navbar">
+            <ul>
+                <li>
+                    <a class="nav-link scrollto" href="/server-info">Server Info</a>
+                </li>
+                <li class="dropdown"><a href=""><span>Server Staff</span> <i class="bi bi-chevron-down"></i></a>
+                    <ul>
+                        <li class="dropdown"><a href="/staff"><span>Staff Members</span></a></li>
+                        <li class="dropdown"><a href="/staff/application"><span>Staff Application</span></a></li>
+                    </ul>
+                </li>
+                <li class="dropdown"><a href=""><span>PartnerShip</span> <i class="bi bi-chevron-down"></i></a>
+                    <ul>
+                        <li class="dropdown"><a href="/partner"><span>Partner Servers</span></a></li>
+                        <li class="dropdown"><a href="/partner/application"><span>PartnerShip Application</span></a></li>
+                    </ul>
+                </li>
+                <li class="dropdown"><a href=""><span>Bots Pages</span> <i class="bi bi-chevron-down"></i></a>
+                    <ul>
+                        <li class="dropdown"><a href="/musics_dj"><span>Musics_DJ</span> <i
+                                    class="bi bi-chevron-down"></i></a>
+                            <ul>
+                                <li><a class="nav-link scrollto" href="/musics_dj">Musics_DJ Home</a></li>
+                                <li><a class="nav-link scrollto" href="https://discord.com/oauth2/authorize?client_id=772133876813922314&permissions=305626464&redirect_uri=https%3A%2F%2Fdiscord.gg%2FMsJ99j5Bcv&response_type=code&scope=connections%20guilds.join%20identify%20bot">Invite</a>
+                                </li>
+                                <li><a class="nav-link scrollto" href="https://top.gg/bot/772133876813922314">Vote</a>
+                                </li>
+                                <li><a class="nav-link scrollto" href="/musics_dj/commands">Commands</a></li>
+                            </ul>
+                        </li>
+                        <li class="dropdown"><a href="/avenger"><span>Avenger</span> <i
+                                    class="bi bi-chevron-down"></i></a>
+                            <ul>
+                                <li><a class="nav-link scrollto" href="/avenger">Avenger Home</a></li>
+                                <li><a class="nav-link scrollto" href="https://discord.com/oauth2/authorize?client_id=775412494235729960&permissions=2088762486&redirect_uri=https%3A%2F%2Fdiscord.gg%2FMsJ99j5Bcv&response_type=code&scope=bot%20guilds.join%20connections%20identify">Invite</a>
+                                </li>
+                                <li><a class="nav-link scrollto" href="https://top.gg/bot/775412494235729960">Vote</a>
+                                </li>
+                                <li><a class="nav-link scrollto" href="/avenger/commands">Commands</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a class="nav-link scrollto" href="/support">Join Server</a>
+                </li>
+                <li><a class="nav-link scrollto" href="/auth/logout">Logout</a></li>
+            </ul>
+            <i class="bi bi-list mobile-nav-toggle"></i>
+        </nav>
+        <!-- .navbar -->
+    </div>
+</header>
+<!-- End Header -->
