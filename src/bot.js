@@ -32,6 +32,15 @@ const MusicsdjRoute = require('./routes/musics_dj');
 const AvengerRoute = require('./routes/avenger');
 const SitemapRoute = require('./routes/sitemap');
 
+// set up rate limiter: maximum of five requests per minute
+var RateLimit = require('express-rate-limit');
+var limiter = new RateLimit({
+  windowMs: 1*60*1000, // 1 minute
+  max: 5
+});
+
+// apply rate limiter to all requests
+app.use(limiter);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
 	extended: true,
@@ -56,7 +65,6 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Passport
-
 app.use(passport.initialize());
 app.use(passport.session());
 
