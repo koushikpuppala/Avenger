@@ -19,20 +19,20 @@
 <b><h3>Avenger is an Discord Bot with all Multi Functional Commands</h3></b>
 
 <b><i><h2>Commands</h2></i></b>
-<hr />
 <b><h3>Avenger Bot have 200+ Commands which includes Music, Moderation, Reaction Roles, Giveaway, Images, Level, Ticket, Fun, Games, Etc..,</h3></b>
 <b><h3>To Get Full List of Commands Check <a href="https://github.com/puppala-koushik/Avenger/blob/Avenger/docs/COMMANDS.md">Here</a></h3></b>
+<hr />
 
 <b><i><h2>LICENSE</h2></i></b>
-<hr />
 <b><h3>License <a href="https://github.com/puppala-koushik/Avenger/blob/Avenger/LICENSE"><b>MIT</b> License (X11 License)</a> is used in the Code</h3></b>
+<hr />
 
 <b><i><h2>Developers (OR) Contributers</h2></i></b>
-<hr />
 <b><h3>At Present I am onlt the Developer For this Bot.
 <br />If You Wat to Help me You Can Join my Server and Contact me.
 <br />If you want to help in Translation you can Fork the Repo and Add Translated Language and make a Pull Request.
 <br />I will Check and add you as Contributer<h3></b>
+<hr />
 
 <b><i><h1>Avengers Assemble Support Server</h1></i></b>
 <b><h3>If You want to Support me. So, you can Join my Server
