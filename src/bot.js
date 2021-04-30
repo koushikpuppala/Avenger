@@ -20,7 +20,6 @@ const Store = require('connect-mongo');
 const UserSchema = require('./database/models/DiscordUser');
 const SECRET = bot.config.JwtSecret;
 const fetch = require('node-fetch');
-const csrf = require('csurf');
 
 // Routes
 const HomeRoute = require('./routes/home');
@@ -47,7 +46,6 @@ app.use(bodyParser.urlencoded({
 	extended: true,
 }));
 
-app.use(csrf({ cookie: true }));
 app.use(session({
 	secret: SECRET,
 	cookie: {
