@@ -1,0 +1,69 @@
+// ======= Header =======
+header#header.fixed-top.d-flex.align-items-center.header-transparent
+  .container.d-flex.justify-content-between.align-items-center
+    #logo
+      h1
+        a(href='<%= HOME %>')
+          img(style='width:10%; border-image-repeat: round; border-radius: 100%;' src='https://cdn.discordapp.com/avatars/<%= discordId %>/<%= avatar %>' alt='<%= username %>')
+    nav#navbar.navbar
+      ul
+        li.dropdown
+          a(href='')
+            span Server Staff
+            i.bi.bi-chevron-down
+          ul
+            li.dropdown
+              a(href='/staff')
+                span Staff Members
+            li.dropdown
+              a(href='/staff/application')
+                span Staff Application
+        li.dropdown
+          a(href='')
+            span PartnerShip
+            i.bi.bi-chevron-down
+          ul
+            li.dropdown
+              a(href='/partner')
+                span Partner Servers
+            li.dropdown
+              a(href='/partner/application')
+                span PartnerShip Application
+        li.dropdown
+          a(href='')
+            span Bots Pages
+            i.bi.bi-chevron-down
+          ul
+            li.dropdown
+              a(href='/musics_dj')
+                span Musics_DJ
+                i.bi.bi-chevron-down
+              ul
+                li
+                  a.nav-link.scrollto(href='/musics_dj') Musics_DJ Home
+                li
+                  a.nav-link.scrollto(href='https://discord.com/oauth2/authorize?client_id=772133876813922314&permissions=305626464&redirect_uri=https%3A%2F%2Fdiscord.gg%2FMsJ99j5Bcv&response_type=code&scope=connections%20guilds.join%20identify%20bot') Add to Server
+                li
+                  a.nav-link.scrollto(href='https://top.gg/bot/772133876813922314') Vote
+                li
+                  a.nav-link.scrollto(href='/musics_dj/commands') Commands
+            li.dropdown
+              a(href='/avenger')
+                span Avenger
+                i.bi.bi-chevron-down
+              ul
+                li
+                  a.nav-link.scrollto(href='/avenger') Avenger Home
+                li
+                  a.nav-link.scrollto(href='https://discord.com/oauth2/authorize?client_id=775412494235729960&permissions=2088762486&redirect_uri=https%3A%2F%2Fdiscord.gg%2FMsJ99j5Bcv&response_type=code&scope=bot%20guilds.join%20connections%20identify') Add to Server
+                li
+                  a.nav-link.scrollto(href='https://top.gg/bot/775412494235729960') Vote
+                li
+                  a.nav-link.scrollto(href='/avenger/commands') Commands
+        li
+          a.nav-link.scrollto(href='/support') Join Server
+        li
+          a.nav-link.scrollto(href='/auth/logout') Logout
+      i.bi.bi-list.mobile-nav-toggle
+    // navbar
+// End Header

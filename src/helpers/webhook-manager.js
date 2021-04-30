@@ -15,7 +15,7 @@ module.exports = async (bot) => {
 			const repeats = Math.ceil(bot.embedCollection.get(channelIDs[i]).length / 10);
 			for (let j = 0; j < repeats; j++) {
 				// Get the embeds
-				const embeds = bot.embedCollection.get(channelIDs[i]).slice(j * 10, (j * 10) + 10);
+				const embeds = bot.embedCollection.get(channelIDs[i])?.slice(j * 10, (j * 10) + 10);
 				if (!embeds) return;
 
 				await webhook.send('', {

@@ -20,7 +20,7 @@ const Store = require('connect-mongo');
 const UserSchema = require('./database/models/DiscordUser');
 const SECRET = bot.config.JwtSecret;
 const fetch = require('node-fetch');
-const csrf = require("csurf");
+const csrf = require('csurf');
 
 // Routes
 const HomeRoute = require('./routes/home');
@@ -33,10 +33,11 @@ const AvengerRoute = require('./routes/avenger');
 const SitemapRoute = require('./routes/sitemap');
 
 // set up rate limiter: maximum of five requests per minute
-var RateLimit = require('express-rate-limit');
-var limiter = new RateLimit({
-  windowMs: 1*60*1000, // 1 minute
-  max: 5
+const RateLimit = require('express-rate-limit');
+const limiter = new RateLimit({
+	// 1 minute
+	windowMs: 1 * 60 * 1000,
+	max: 5,
 });
 
 // apply rate limiter to all requests
@@ -90,10 +91,11 @@ app.get('/arc-sw.js', (req, res) => {
 (async () => {
 	// load commands
 	const cmdFolders = await readdir('./src/commands/');
-	bot.logger.log(`=-=-=-=-=-=-=- Loading command(s): ${cmdFolders.length} -=-=-=-=-=-=-=`);
 	cmdFolders.forEach(async (dir) => {
+		const commandsFile = fs.readdirSync(`./src/commands/${dir}`).filter(file => file.endsWith('.js'));
 		if (bot.config.disabledPlugins.includes(dir)) return;
 		const commands = await readdir('./src/commands/' + dir + '/');
+		bot.logger.log(`=-=-=-=-=-=-=- Loading ${dir} command(s): ${commandsFile.length} -=-=-=-=-=-=-=`);
 		commands.forEach((cmd) => {
 			if (bot.config.disabledCommands.includes(cmd.replace('.js', ''))) return;
 			const resp = bot.loadCommand('./commands/' + dir, cmd);

@@ -5,7 +5,7 @@ Want to host the bot yourself, if not [invite him](https://discord.com/oauth2/au
 ### Installation
 
 First of all, make sure you have downloaded:
- * [Node.js](https://nodejs.org/en/). (Version 12 or higher)
+ * [Node.js](https://nodejs.org/en/). (Version 14 or higher)
  * NPM (Normally comes with Node.js)
  * [MongoDB](https://www.mongodb.com/) (This can be a local server or one hosted by them)
  * [git](https://git-scm.com/) (optional).

@@ -1,6 +1,6 @@
 // Dependecies
 const Command = require('../../structures/Command.js'),
-	{ ReactionRoleSchema } = require('../../database/models/ReactionRole');
+	{ ReactionRoleSchema } = require('../../database/models');
 
 module.exports = class Rrremove extends Command {
 	constructor(bot) {

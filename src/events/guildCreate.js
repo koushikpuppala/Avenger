@@ -30,7 +30,7 @@ module.exports = class guildCreate extends Event {
 			.setFooter(guild.id)
 			.setTimestamp();
 		// Find channel and send message
-		const modChannel = await bot.channels.fetch(bot.config.SupportServer.GuildChannel);
+		const modChannel = await bot.channels.fetch(bot.config.SupportServer.GuildCreateChannel);
 		if (modChannel) bot.addEmbed(modChannel.id, embed);
 		const join = guild.channels.cache.find((c) => c.type === 'text' || c.postable);
 		if (!join) return;

@@ -21,7 +21,7 @@ module.exports = class guildDelete extends Event {
 				.setFooter(guild.id)
 				.setTimestamp();
 			// Find channel and send message
-			const modChannel = await bot.channels.fetch(bot.config.SupportServer.GuildChannel);
+			const modChannel = await bot.channels.fetch(bot.config.SupportServer.GuildDeleteChannel);
 			if (modChannel) bot.addEmbed(modChannel.id, embed);
 		} catch (err) {
 			bot.logger.error('Unable to fetch guild information.');

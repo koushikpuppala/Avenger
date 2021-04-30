@@ -21,10 +21,12 @@ module.exports = class Help extends Command {
 			// Show default help page
 			const embed = new MessageEmbed()
 				.setAuthor('Available commands', bot.user.displayAvatarURL({ format: 'png' }))
+				.setThumbnail(bot.user.displayAvatarURL({ format: 'png' }))
 				.setColor('RANDOM')
 				.setDescription([
 					`**Prefix:** \`${settings.prefix}\` (You can also use <@!${bot.user.id}> as a prefix)`,
 					`**Type \`${settings.prefix}help [command name]\` for command specific information.**`,
+					`**Support Server: If you need Support Join in our [Server](${bot.config.SupportServer.link})**`,
 				].join('\n'));
 			const categories = bot.commands.map(c => c.help.category);
 			categories
@@ -40,7 +42,7 @@ module.exports = class Help extends Command {
 
 					const length = bot.commands
 						.filter(c => c.help.category === category).size;
-					embed.addField(`${category} [**${length}**]`, commands, false);
+					embed.addField(`${category} [**${length}**]\n`, commands, false);
 				});
 			message.channel.send(embed);
 		} else if (message.args.length == 1) {

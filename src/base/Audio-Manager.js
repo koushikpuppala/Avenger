@@ -8,10 +8,14 @@ require('../structures/Player');
 module.exports = async (bot) => {
 	const clientID = bot.config.api_keys.spotify.iD;
 	const clientSecret = bot.config.api_keys.spotify.secret;
+	const Host = bot.config.LavaHost;
+	const Pass = bot.config.LavaPass;
+	let Port = bot.config.LavaPort;
+	Port = Number(Port);
 
 	bot.manager = new Manager({
 		nodes: [
-			{ host:'localhost', port: 3000, password: 'shallnotpass' },
+			{ host:Host, port: Port, password: Pass },
 		],
 		plugins: [
 			new Spotify({ clientID, clientSecret }),
