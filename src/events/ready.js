@@ -135,7 +135,7 @@ module.exports = class Ready extends Event {
 			], true)
 			.setTimestamp()
 			.setFooter(bot.user.id);
-		const ReadyChannel = bot.channels.cache.get(bot.config.SupportServer.ReadyChannel);
-		if (ReadyChannel) require('../helpers/webhook-manager')(bot, ReadyChannel.id, embed);
+		const ReadyChannel = await bot.channels.fetch(bot.config.SupportServer.ReadyChannel);
+		if (ReadyChannel) bot.addEmbed(ReadyChannel.id, embed);
 	}
 };
