@@ -1,6 +1,6 @@
 {
-	"name": "@avenger/avenger",
-	"version": "1.1.0",
+	"name": "@avengers-assemble/avenger",
+	"version": "1.0.0",
 	"description": "This is my Second Discord bot made using [discord.js](https://github.com/discordjs/discord.js) and having [Dashboard](https://avengers-assemble.tech) using [pug](https://pugjs.org) and [discord.js](https://github.com/discordjs/discord.js). The Owner of this Project is [Koushik puppala](https://koushikpuppala.live). If you want to help us Join in Our [Discord Server](https://avengers-assemble.tech/support) ",
 	"main": "src/index.js",
 	"directories": {
