@@ -9,7 +9,6 @@ module.exports = {
 			connectTimeoutMS: 10000,
 			family: 4,
 			useUnifiedTopology: true,
-			useFindAndModify: false,
 		};
 		mongoose.connect(bot.config.MongoDBURl, dbOptions);
 		mongoose.set('useFindAndModify', false);

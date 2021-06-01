@@ -1,3 +1,2 @@
 node_modules
-src/assets/soundclips/*.pcm
-src/assets/soundclips/*.wav
+.env

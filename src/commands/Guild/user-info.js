@@ -1,17 +1,9 @@
 // Dependencies
-const { MessageEmbed } = require('discord.js'),
+const { Embed } = require('../../utils'),
 	moment = require('moment'),
 	Command = require('../../structures/Command.js');
 
-// Emojis for statuses
-const emojiList = {
-	'online': '🟢',
-	'offline': '⚫',
-	'idle': '🟡',
-	'dnd': '🔴',
-};
-
-module.exports = class ServerInfo extends Command {
+module.exports = class UserInfo extends Command {
 	constructor(bot) {
 		super(bot, {
 			name:  'user-info',
@@ -27,23 +19,26 @@ module.exports = class ServerInfo extends Command {
 	}
 
 	// Run command
-	async run(bot, message, settings) {
+	async run(bot, message) {
 		// Get user
-		const member = message.getMember();
+		const members = await message.getMember();
 
 		// send user info
-		const embed = new MessageEmbed()
-			.setAuthor(`${emojiList[member[0].presence.status]} ${member[0].user.tag} (${member[0].user.id})`, member[0].user.displayAvatarURL())
+		const embed = new Embed(bot, message.guild)
+			.setAuthor(members[0].user.tag, members[0].user.displayAvatarURL())
 			.setColor(3447003)
-			.setThumbnail(member[0].user.displayAvatarURL({ format: 'png', size: 512 }))
-			.addField(bot.translate(settings.Language, 'GUILD/USER_NICKNAME'), `\`${member[0].nickname != null ? member[0].nickname : 'None'}\``, true)
-			.addField(bot.translate(settings.Language, 'GUILD/USER_GAME'), `\`${(member[0].presence.activities.length >= 1) ? `${member[0].presence.activities[0].name} - ${(member[0].presence.activities[0].type == 'CUSTOM_STATUS') ? member[0].presence.activities[0].state : member[0].presence.activities[0].details}` : 'None'}\``, true)
-			.addField(bot.translate(settings.Language, 'GUILD/USER_ROLES', [member[0].roles.cache.size, message.guild.roles.cache.size]), member[0].roles.cache.map(roles => roles).join(', '), true)
-			.addField(bot.translate(settings.Language, 'GUILD/USER_JOINED'), `${moment(member[0].joinedAt).format('lll')} \`${moment(member[0].joinedAt).fromNow()} (${Math.round((new Date() - member[0].joinedAt) / 86400000)} day(s) ago)\``)
-			.addField(bot.translate(settings.Language, 'GUILD/USER_REGISTERED'), `${moment(member[0].user.createdAt).format('lll')} \`${moment(member[0].user.createdAt).fromNow()} (${Math.round((new Date() - member[0].user.createdAt) / 86400000)} day(s) ago)\``)
-			.addField(bot.translate(settings.Language, 'GUILD/USER_PERMISSIONS', member[0].permissions.toArray().length), member[0].permissions.toArray().toString().toLowerCase().replace(/_/g, ' ').replace(/,/g, ' » '))
-			.setTimestamp()
-			.setFooter(bot.translate(settings.Language, 'GUILD/INFO_FOOTER', message.author.tag));
+			.setThumbnail(members[0].user.displayAvatarURL({ format: 'png', size: 512 }))
+			.addFields(
+				{ name: message.translate('guild/user-info:USERNAME'), value: members[0].user.username, inline: true },
+				{ name: message.translate('guild/user-info:DISCRIM'), value: members[0].user.discriminator, inline: true },
+				{ name: message.translate('guild/user-info:ROBOT'), value: message.translate(`misc:${members[0].user.bot ? 'YES' : 'NO'}`), inline: true },
+				{ name: message.translate('guild/user-info:CREATE'), value: moment(members[0].user.createdAt).format('lll'), inline: true },
+				{ name: message.translate('guild/user-info:STATUS'), value: `\`${(members[0].presence.activities.length >= 1) ? `${members[0].presence.activities[0].name} - ${(members[0].presence.activities[0].type == 'CUSTOM_STATUS') ? members[0].presence.activities[0].state : members[0].presence.activities[0].details}` : 'None'}\``, inline: true },
+				{ name: message.translate('guild/user-info:ROLE'), value: members[0].roles.highest, inline: true },
+				{ name: message.translate('guild/user-info:JOIN'), value: moment(members[0].joinedAt).format('lll'), inline: true },
+				{ name: message.translate('guild/user-info:NICK'), value: members[0].nickname != null ? members[0].nickname : message.translate('misc:NONE'), inline: true },
+				{ name: message.translate('guild/user-info:ROLES'), value: members[0].roles.cache.map(roles => roles).join(', ') },
+			);
 		message.channel.send(embed);
 	}
 };

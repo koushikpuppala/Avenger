@@ -1,6 +1,6 @@
 const { MessageEmbed } = require('discord.js'),
 	Command = require('../../structures/Command.js'),
-	fs = require('fs');
+	LinkSchema = require('../../database/models');
 
 module.exports = class AddLink extends Command {
 	constructor(bot) {
@@ -31,39 +31,49 @@ module.exports = class AddLink extends Command {
 
 			if (!this.isURL(message.args[0])) return message.channel.send('Given Url is invalid, Make sure you send working URL').then(m => m.delete({ timeout: 5000 }));
 
-
-			const database = JSON.parse(fs.readFileSync('./src/link.json', 'utf8'));
-
-			const check = database.find(x => x.id === message.author.id);
+			const check = await LinkSchema.find({
+				userID: message.author.id,
+			});
 
 			if (check) {
-				if (check.link.length === 5) {
+				if (check.links.length === 5) {
 					return message.channel.send(new MessageEmbed()
 						.setTitle(message.author.tag, message.author.displayAvatarURL({ dynamic: true }))
 						.setDescription('You reached your limit, you can not add more than 5 website.')
 						.setTimestamp(),
 					).then(m => m.delete({ timeout: 60000 }));
+				} else {
+					await LinkSchema.findOneAndUpdate({
+						userID: message.author.id,
+					}, {
+						$addToSet: {
+							links: message.args[0],
+						},
+						$set: {
+							userName: message.author.tag,
+						},
+					});
 				}
-				const numb = database.indexOf(check);
-				database[numb].link.push(message.args[0]);
 			} else {
-				database.push({
-					id: message.author.id,
-					name: message.author.username,
-					link: [message.args[0]],
-				});
+				try {
+					const database = new LinkSchema({
+						userID: message.author.id,
+						userName: message.author.tag,
+						links: message.args[0],
+					});
+					await database.save();
+					message.channel.send(new MessageEmbed()
+						.setTitle(message.author.tag, message.author.displayAvatarURL({ dynamic: true }))
+						.setColor('GREEN')
+						.setDescription('Added Your Website to monitoring')
+						.setTimestamp(),
+					).then(m => m.delete({ timeout: 60000 }));
+				} catch(err) {
+					if (message.deletable) message.delete();
+					bot.logger.error(`Command: '${this.help.name}' has error: ${err.message}.`);
+					message.channel.error(settings.Language, 'ERROR_MESSAGE', err.message).then(m => m.delete({ timeout: 5000 }));
+				}
 			}
-
-			fs.writeFile('./src/link.json', JSON.stringify(database, null, 2), err => {
-				if (err) console.log(err);
-			});
-
-			message.channel.send(new MessageEmbed()
-				.setTitle(message.author.tag, message.author.displayAvatarURL({ dynamic: true }))
-				.setColor('GREEN')
-				.setDescription('Added Your Website to monitoring')
-				.setTimestamp(),
-			).then(m => m.delete({ timeout: 60000 }));
 		}
 	}
 };

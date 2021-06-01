@@ -46,7 +46,7 @@ const config = {
 	},
 	// add plugins/commands here if you don't want them loaded in the bot.
 	disabledCommands: ['steam', 'meme', 'reddit', 'announcement'],
-	disabledPlugins: [],
+	disabledPlugins: ['BotDevelopers'],
 	// This is a list of websites that the bot is on. API to interect with server/shard count
 	DiscordBotLists: {
 		// https://discord.boats/
@@ -85,6 +85,7 @@ const config = {
 		ReadyChannel: process.env.READY_CHANNEL,
 		// Where the hosting will take place
 		HostChannel: process.env.HOST_CHANNEL,
+		HostCategory: process.env.HOST_CATEGORY,
 		// My Support server Verification Channel
 		VerifyChannel: process.env.VERIFY_CHANNEL,
 		// My Support server Verification Role
@@ -96,11 +97,6 @@ const config = {
 		prefix: process.env.PREFIX,
 		Language: process.env.LANGUAGE,
 		plugins: ['Fun', 'Giveaway', 'Bot Dev', 'Guild', 'Image', 'Level', 'Misc', 'Moderation', 'Music', 'NSFW', 'Plugins', 'Recording', 'Searcher', 'Ticket', 'Utils'],
-	},
-	// Custom emojis, just for cosmetic (change these if you wish)
-	emojis: {
-		cross: '<a:cross:818394472224260118>',
-		tick: '<a:tick:818394472563605554>',
 	},
 	// This will spam your console if you enable this but will help with bug fixing
 	debug: false,

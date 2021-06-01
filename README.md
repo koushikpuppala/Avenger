@@ -1,8 +1,8 @@
 <center><img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&height=200&section=header&text=Avengers%20Assemble&fontSize=80&fontAlignY=35&animation=twinkling&fontColor=gradient" /></center>
 <div align="center">
-<a href="https://avengers-assemble.tech"><img alt="Website" src="https://img.shields.io/website?style=social&url=https%3A%2F%2Favengers-assemble.tech" /></a>
-<img alt="Uptime Robot ratio (7 days)" src="https://img.shields.io/uptimerobot/ratio/7/m787686560-b6b5d21868174886a3c037b6?style=social">
-<img src="https://www.codefactor.io/repository/github/puppala-koushik/avenger/badge?style=social" alt="CodeFactor" /></a>
+<a href="https://avengers-assemble.tech"><img alt="Website status" src="https://img.shields.io/nodeping/status/7ou2i07r-5j2d-4587-85rg-bn4124agp55g?down_message=Offline&label=Website%20Status&style=social&up_message=Online"></a>
+<img alt="NodePing uptime" src="https://img.shields.io/nodeping/uptime/7ou2i07r-5j2d-4587-85rg-bn4124agp55g?style=social">
+<img src="https://www.codefactor.io/repository/github/puppala-koushik/avenger/badge?style=social" alt="CodeFactor" />
 <a href="https://avengers-assemble.tech/support" ><img alt="Discord" src="https://img.shields.io/discord/775411681714503680?label=Discord&logo=discord&style=social"></a><br />
 <img alt="GitHub language count" src="https://img.shields.io/github/languages/count/puppala-koushik/Avenger?logo=github&style=social">
 <img alt="GitHub top language" src="https://img.shields.io/github/languages/top/puppala-koushik/avenger?style=social&logo=github">

@@ -4,10 +4,12 @@ module.exports = Structure.extend('Player', Player => {
 	class player extends Player {
 		constructor(...args) {
 			super(...args);
-			this.musicTrivia = false;
+			// extra settings
 			this.speed = 1;
-			this.timeout = null;
 			this.twentyFourSeven = false;
+			this.previousTracks = [];
+			// for bot leave function
+			this.timeout = null;
 		}
 
 		// add filters
@@ -22,11 +24,18 @@ module.exports = Structure.extend('Player', Player => {
 
 		// reset filters
 		resetFilter() {
+			this.speed = 1;
 			this.node.send({
 				op: 'filters',
 				guildId: this.guild.id || this.guild,
 				...{},
 			});
+			return this;
+		}
+
+		// Adds a song to previousTracks
+		addPreviousSong(song) {
+			this.previousTracks.push(song);
 			return this;
 		}
 

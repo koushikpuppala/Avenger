@@ -1,9 +1,7 @@
 /* eslint-disable no-shadow */
-/* eslint-disable no-redeclare */
-/* eslint-disable no-var */
 const { MessageEmbed } = require('discord.js'),
 	Command = require('../../structures/Command.js'),
-	fs = require('fs');
+	LinkSchema = require('../../database/models');
 
 module.exports = class RemoveLink extends Command {
 	constructor(bot) {
@@ -19,9 +17,6 @@ module.exports = class RemoveLink extends Command {
 	}
 
 	async run(bot, message) {
-		let database = JSON.parse(fs.readFileSync('./src/link.json', 'utf8'));
-
-		if (!database) return message.channel.send('Something went wrong...').then(m => m.delete({ timeout: 5000 }));
 
 		if (message.channel.id != bot.config.SupportServer.HostChannel) {
 			return message.channel.send(new MessageEmbed()
@@ -34,76 +29,98 @@ module.exports = class RemoveLink extends Command {
 			).then(m => m.delete({ timeout: 30000 }));
 		} else {
 
-			const data = database.find((x) => x.id === message.author.id);
+			const data = LinkSchema.find({
+				userID: message.author.id,
+			});
 
-			if (!data) return message.channel.send('You do not have any site to monitor, use `${bot.config.defaultSettings.prefix}` too add a website');
+			if (!data) return message.channel.send('You do not have any site to monitor, use `${bot.config.defaultSettings.prefix}`addlink too add a website');
 
-			const value = database.indexOf(data);
+			const category = message.guild.channels.cache.get(bot.config.SupportServer.HostCategory);
+
 			const array = [];
 
-			database[value].link.forEach((m, i) => {
-				array.push(`**[${i + 1}]**: \`${m}\``);
+			data.links.forEach((m) => {
+				array.push(`**\`${m}\`**`);
 			});
 
-			const embed = new MessageEmbed()
-				.setTitle('Send The number of the link to remove')
-				.setColor('BLUE')
-				.setDescription(array.join('\n'));
+			// create channel
+			message.guild.channels.create(`ticket-${message.author.id}`, {
+				type: 'text',
+				reason: '${message.author.tag} has created a ticket',
+				parent: category.id,
+				permissionOverwrites: [
+					{ id: message.author, allow: ['SEND_MESSAGES', 'VIEW_CHANNEL'] },
+					{ id: message.guild.roles.everyone, deny: ['SEND_MESSAGES', 'VIEW_CHANNEL'] },
+					{ id: bot.user, allow: ['SEND_MESSAGES', 'VIEW_CHANNEL', 'EMBED_LINKS'] }],
+			})
+				.then(channel => {
 
-			const msg = await message.channel.send(embed);
+					setTimeout(() => {
 
-			const responses = await message.channel.awaitMessages(
-				(msg) => msg.author.id === message.author.id,
-				{ time: 300000, max: 1 },
-			);
-			const repMsg = responses.first();
+						const embed = new MessageEmbed()
+							.setTitle('Send The number of the link to remove')
+							.setColor('BLUE')
+							.setDescription(array.join('\n'));
 
-			if (!repMsg) {
-				msg.delete();
-				return message.channel.send('Cancelled The Process of deleting monitor website.');
-			}
+						const msg = channel.send(embed);
 
-			if (isNaN(repMsg.content)) {
-				msg.delete();
-				return message.channel.send('Cancelled The Process of deleting monitor website due to **invalid digit**');
-			}
+						const responses = channel.awaitMessages(
+							(msg) => msg.author.id === message.author.id,
+							{ time: 300000, max: 1 },
+						);
+						const repMsg = responses.first();
 
-			if (!database[value].link[parseInt(repMsg.content) - 1]) {
-				msg.delete();
-				return message.channel.send('There is no link exist with this number.');
-			}
+						if (!repMsg) {
+							msg.delete();
+							return channel.send('Cancelled The Process of deleting monitor website.');
+						}
 
-			if (database[value].link.length === 1) {
-				delete database[value];
+						if (!this.isURL(repMsg.content)) {
+							msg.delete();
+							return channel.send('Cancelled The Process of deleting monitor website due to **Invalid URL**');
+						}
 
-				var filtered = database.filter((el) => {
-					return el != null && el != '';
+						const link = LinkSchema.find({
+							userID: message.author.id,
+							links: repMsg.content,
+						});
+
+						if (!link) {
+							msg.delete();
+							return channel.send('There is no link exist with this number.');
+						}
+
+						if (data.links.length === 1) {
+							LinkSchema.findOneAndDelete({
+								userID: message.author.id,
+								links: repMsg.content,
+							});
+						} else {
+							LinkSchema.findOneAndUpdate({
+								userID: message.author.id,
+							},
+							{
+								$pull: {
+									links: repMsg.content,
+								},
+							});
+						}
+
+						repMsg.delete();
+						msg.delete();
+
+						channel.send(new MessageEmbed()
+							.setTitle(message.author.tag, message.author.displayAvatarURL({ dynamic: true }))
+							.setDescription('Removed the website from monitoring, you can check website using `${bot.config.defaultSettings.prefix}`linkstats and this Channel will be deleted in 1 Minute')
+							.setColor('GREEN')
+							.setTimestamp(),
+						).then(m => m.delete({ timeout: 5000 }));
+
+						// delete channel
+						channel.delete();
+					}, 60000);
+
 				});
-
-				database = filtered;
-			} else {
-				delete database[value].link[parseInt(repMsg.content) - 1];
-
-				var filtered = database[value].link.filter((el) => {
-					return el != null && el != '';
-				});
-
-				database[value].link = filtered;
-			}
-
-			fs.writeFile('./src/link.json', JSON.stringify(database, null, 2), (err) => {
-				if (err) console.log(err);
-			});
-
-			repMsg.delete();
-			msg.delete();
-
-			message.channel.send(new MessageEmbed()
-				.setTitle(message.author.tag, message.author.displayAvatarURL({ dynamic: true }))
-				.setDescription('Removed the website from monitoring, you can check website using `${bot.config.defaultSettings.prefix}stats`')
-				.setColor('GREEN')
-				.setTimestamp(),
-			).then(m => m.delete({ timeout: 5000 }));
 		}
 	}
 };

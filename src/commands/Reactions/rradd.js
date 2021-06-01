@@ -1,27 +1,28 @@
 // Dependecies
 const Command = require('../../structures/Command.js'),
 	{ ReactionRoleSchema } = require('../../database/models'),
-	{ MessageEmbed } = require('discord.js');
+	{ Embed } = require('../../utils');
 
-module.exports = class Rradd extends Command {
+module.exports = class ReactionRoleAdd extends Command {
 	constructor(bot) {
 		super(bot, {
-			name: 'rradd',
+			name: 'rr-add',
+			guildOnly: true,
 			dirname: __dirname,
-			aliases: ['rra'],
+			aliases: ['reactionroles-add'],
 			userPermissions: ['MANAGE_GUILD'],
-			botPermissions: ['SEND_MESSAGES', 'EMBED_LINKS'],
-			description: 'Make reaction roles',
-			usage: 'rradd <channelID> <Name>',
+			botPermissions: ['SEND_MESSAGES', 'EMBED_LINKS', 'ADD_REACTIONS', 'MANAGE_ROLES'],
+			description: 'Create a reaction role',
+			usage: 'rr-add [channelID]',
 			cooldown: 5000,
-			examples: ['rradd 37844848481818441'],
+			examples: ['rr-add 37844848481818441'],
 		});
 	}
 
 	// Run command
 	async run(bot, message, settings) {
-		// Make sure user can edit server plugins
-		if (!message.member.hasPermission('MANAGE_GUILD')) return message.channel.error(settings.Language, 'USER_PERMISSION', 'MANAGE_GUILD').then(m => m.delete({ timeout: 10000 }));
+		// Delete message
+		if (settings.ModerationClearToggle & message.deletable) message.delete();
 
 		// check if the guild has reached max reaction roles
 		await ReactionRoleSchema.find({
@@ -31,42 +32,33 @@ module.exports = class Rradd extends Command {
 			if (err) {
 				if (message.deletable) message.delete();
 				bot.logger.error(`Command: '${this.help.name}' has error: ${err.message}.`);
-				return message.channel.error(settings.Language, 'ERROR_MESSAGE', err.message).then(m => m.delete({ timeout: 5000 }));
+				return message.channel.error('misc:ERROR_MESSAGE', { ERROR: err.message }).then(m => m.delete({ timeout: 5000 }));
 			}
 
 			// check for number of reaction roles in current server
 			if (reacts.length >= 3 && !message.guild.premium) {
 				// You need to premium to create more reaction roles
-				return message.channel.send('You need premium to create more reaction roles. Premium servers get up to `10` reaction role');
+				return message.channel.send(message.translate('plugins/rr-add:NEED_PREMIUM'));
 			} else if (reacts.length >= 10) {
 				// You have reached max amout of reaction roles in this server
-				return message.channel.send('There is a max of 10 reactions roles per a server even with premium.');
+				return message.channel.send(message.translate('plugins/rr-add:MAX_RR'));
 			} else {
 				// They can create more reaction roles
-				// Make sure bot has permission to give/remove roles
-				if (!message.guild.me.hasPermission('MANAGE_ROLES')) {
-					bot.logger.error(`Missing permission: \`MANAGE_ROLES\` in [${message.guild.id}].`);
-					return message.channel.error(settings.Language, 'MISSING_PERMISSION', 'MANAGE_ROLES').then(m => m.delete({ timeout: 10000 }));
-				}
-
-				// Make sure data was entered
-				if (!message.args[0]) return message.channel.error(settings.Language, 'INCORRECT_FORMAT', settings.prefix.concat(this.help.usage)).then(m => m.delete({ timeout: 15000 }));
-				if (!message.args[1]) return message.channel.error(settings.Language, 'INCORRECT_FORMAT', settings.prefix.concat(this.help.usage)).then(m => m.delete({ timeout: 15000 }));
 
 				// Make sure channel is a text channel and permission
-				const channel = message.guild.channels.cache.get(message.args[0]);
+				const channel = message.guild.channels.cache.get(message.args[0]) ? message.guild.channels.cache.get(message.args[1]) : message.channel;
 				if (!channel || channel.type !== 'text' || !channel.permissionsFor(bot.user).has('VIEW_CHANNEL')) {
-					return message.channel.error(settings.Language, 'MISSING_CHANNEL');
+					return message.channel.error('misc:MISSING_CHANNEL');
 				} else if (!channel.permissionsFor(bot.user).has('SEND_MESSAGES')) {
-					return message.channel.error(settings.Language, 'MISSING_PERMISSION', 'SEND_MESSAGES').then(m => m.delete({ timeout: 10000 }));
+					return message.channel.error('misc:MISSING_PERMISSION', { PERMISSIONS: message.translate('permissions:SEND_MESSAGES') }).then(m => m.delete({ timeout: 10000 }));
 				} else if (!channel.permissionsFor(bot.user).has('EMBED_LINKS')) {
-					return message.channel.error(settings.Language, 'MISSING_PERMISSION', 'EMBED_LINKS').then(m => m.delete({ timeout: 10000 }));
+					return message.channel.error('misc:MISSING_PERMISSION', { PERMISSIONS: message.translate('permissions:EMBED_LINKS') }).then(m => m.delete({ timeout: 10000 }));
 				} else if (!channel.permissionsFor(bot.user).has('ADD_REACTIONS')) {
-					return message.channel.error(settings.Language, 'MISSING_PERMISSION', 'ADD_REACTIONS').then(m => m.delete({ timeout: 10000 }));
+					return message.channel.error('misc:MISSING_PERMISSION', { PERMISSIONS: message.translate('permissions:ADD_REACTIONS') }).then(m => m.delete({ timeout: 10000 }));
 				}
 
 				// Get all roles mentioned
-				message.channel.send(bot.translate(settings.Language, 'PLUGINS/SEND_ROLES'));
+				message.channel.send(message.translate('plugins/rr-add:SEND_ROLES'));
 
 				const filter = (m) => message.author.id === m.author.id || (m.content == 'cancel' && m.author.id == message.author.id);
 
@@ -79,20 +71,20 @@ module.exports = class Rradd extends Command {
 						errors: ['time'],
 					});
 				} catch (e) {
-					return message.reply('You didn\'t send any roles in time.');
+					return message.reply(message.translate('misc:WAITED_TOO_LONG'));
 				}
 
 				// if message was 'cancel' then stop reaction role creation
 				if (roleMsgs.first().content.toLowerCase() === 'cancel') {
-					return message.channel.send('Cancelled selection.');
+					return message.channel.send(message.translate('misc:CANCELLED'));
 				}
 
 				// Validate the list of emoji for reaction roles
 				roleMsgs.first().args = roleMsgs.first().content.split(' ');
 				let roles =	roleMsgs.first().getRole();
-				// Check role hierarchy to make sure bot can give user those roles
+				// Check role hierarchy to make sure bot can give user those roles or if the role is managed by integration (a bot role etc)
 				roles = roles.filter(r => {
-					if (r.comparePositionTo(message.guild.me.roles.highest) > 0) {
+					if (r.comparePositionTo(message.guild.me.roles.highest) >= 0 || r.managed) {
 						return false;
 					} else {
 						return true;
@@ -102,11 +94,11 @@ module.exports = class Rradd extends Command {
 				if (!roles[0]) return message.channel.send('No roles entered');
 
 				// Show what roles are being added
-				const embed = new MessageEmbed()
+				const embed = new Embed(bot, message.guild)
 					.setDescription([
 						`Roles selected: ${roles.join(', ')}`,
 						'',
-						bot.translate(settings.Language, 'PLUGINS/SEND_EMOJIS'),
+						message.translate('plugins/rr-add:SEND_EMOJIS'),
 					].join('\n'));
 				message.channel.send(embed);
 
@@ -119,12 +111,12 @@ module.exports = class Rradd extends Command {
 						errors: ['time'],
 					});
 				} catch (e) {
-					return message.reply('You didn\'t send any emojis in time.');
+					return message.reply(message.translate('misc:WAITED_TOO_LONG'));
 				}
 
 				// if message was 'cancel' then stop reaction role creation
 				if (emojiMsgs.first().content.toLowerCase() === 'cancel') {
-					return message.channel.send('Cancelled selection.');
+					return message.channel.send(message.translate('misc:CANCELLED'));
 				}
 
 				// Validate the list of emoji for reaction roles
@@ -133,14 +125,15 @@ module.exports = class Rradd extends Command {
 				emojis.splice(emojis.length, roles.length);
 
 				// Make sure the correct number of emojis were entered
-				if (!emojis[0] || emojis.length < roles.length) return message.channel.send('An incorrect number of emojis were entered');
+				if (!emojis[0] || emojis.length < roles.length) return message.channel.send(message.translate('plugins/rr-add:INCORRECT_EMOJIS'));
 
 				// Now display message to chosen channel
-				const Name = message.args.slice(1).join(' ');
-
-				const embed2 = new MessageEmbed()
-					.setTitle(Name + ' ' + bot.translate(settings.Language, 'PLUGINS/EGGLORD_REACTIONS'))
-					.setDescription(bot.translate(settings.Language, 'PLUGINS/REACT_BELOW', createDescription(roles, emojis)));
+				const embed2 = new Embed(bot, message.guild)
+					.setTitle('plugins/rr-add:TITLE')
+					.setDescription([
+						message.translate('plugins/rr-add:REACT_BELOW'),
+						createDescription(roles, emojis),
+					].join('\n'));
 
 				channel.send(embed2).then(async (msg) => {
 					// add reactions to message embed
@@ -163,12 +156,11 @@ module.exports = class Rradd extends Command {
 							reactions: reactions,
 						});
 						await newRR.save();
-						// Tell user that reaction role creation was successfully
-						message.channel.send('Success!');
 					} catch (err) {
 						if (message.deletable) message.delete();
+						msg.delete();
 						bot.logger.error(`Command: '${this.help.name}' has error: ${err.message}.`);
-						message.channel.error(settings.Language, 'ERROR_MESSAGE', err.message).then(m => m.delete({ timeout: 5000 }));
+						message.channel.error('misc:ERROR_MESSAGE', { ERROR: err.message }).then(m => m.delete({ timeout: 5000 }));
 					}
 				});
 			}

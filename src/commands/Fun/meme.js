@@ -1,5 +1,5 @@
 // Dependencies
-const { MessageEmbed } = require('discord.js'),
+const { Embed } = require('../../utils'),
 	Command = require('../../structures/Command.js');
 
 module.exports = class Meme extends Command {
@@ -16,23 +16,28 @@ module.exports = class Meme extends Command {
 
 	// Run command
 	async run(bot, message, settings) {
-		// Retrieve a random meme
-		const meme = await bot.Ksoft.images.meme();
+		// send 'waiting' message to show bot has recieved message
+		const msg = await message.channel.send(message.translate('misc:FETCHING', {
+			EMOJI: message.checkEmoji() ? bot.customEmojis['loading'] : '', ITEM: this.help.name }));
 
-		// An error has occured
-		if (meme.url == undefined) {
-			if (message.deletable) message.delete();
-			bot.logger.error(`Command: '${this.help.name}' has error: Missing meme URL.`);
-			return message.channel.error(settings.Language, 'ERROR_MESSAGE', 'Missing URL meme').then(m => m.delete({ timeout: 5000 }));
-		}
+		// Retrieve a random meme
+		const meme = await this.fetchMeme(bot);
 
 		// Send the meme to channel
-		const embed = new MessageEmbed()
-			.setTitle(`${bot.translate(settings.Language, 'FUN/MEME_TITLE')} /${meme.post.subreddit}`)
+		msg.delete();
+		const embed = new Embed(bot, message.guild)
+			.setTitle('fun/meme:TITLE', { SUBREDDIT: meme.post.subreddit })
 			.setColor(16333359)
 			.setURL(meme.post.link)
 			.setImage(meme.url)
-			.setFooter(`👍 ${meme.post.upvotes}   👎 ${meme.post.downvotes} | ${bot.translate(settings.Language, 'FUN/MEME_FOOTER')} KSOFT.API`);
+			.setFooter('fun/meme:FOOTER', { UPVOTES: meme.post.upvotes.toLocaleString(settings.Language), DOWNVOTES: meme.post.downvotes.toLocaleString(settings.Language) });
 		message.channel.send(embed);
+	}
+
+	// fetch meme
+	async fetchMeme(bot) {
+		const meme = await bot.Ksoft.images.meme();
+		if (!meme.url) return await this.fetchMeme();
+		return meme;
 	}
 };

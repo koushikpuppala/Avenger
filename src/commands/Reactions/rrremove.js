@@ -2,45 +2,55 @@
 const Command = require('../../structures/Command.js'),
 	{ ReactionRoleSchema } = require('../../database/models');
 
-module.exports = class Rrremove extends Command {
+module.exports = class ReactionRoleRemove extends Command {
 	constructor(bot) {
 		super(bot, {
-			name: 'rrremove',
+			name: 'rr-remove',
+			guildOnly: true,
 			dirname: __dirname,
-			aliases: ['rrdel', 'rrr', 'rrdelete'],
+			aliases: ['reactionroles-remove', 'rr-delete'],
 			userPermissions: ['MANAGE_GUILD'],
 			botPermissions: ['SEND_MESSAGES', 'EMBED_LINKS'],
-			description: 'Remove reaction roles',
-			usage: 'rrremove <messageID>',
+			description: 'Make reaction roles',
+			usage: 'reactionroles <messagelink>',
 			cooldown: 5000,
-			examples: ['rrremove 78448484818184431'],
+			examples: ['reactionroles https://discord.com/channels/750822670505082971/761619652009787392/837657228055937054'],
 		});
 	}
 
 	// Run command
 	async run(bot, message, settings) {
-		const messageId = message.args[0];
+		// Delete message
+		if (settings.ModerationClearToggle & message.deletable) message.delete();
 
-		if (!messageId) {
-			return message.channel.error(settings.Language, 'INCORRECT_FORMAT', settings.prefix.concat(this.help.usage)).then(m => m.delete({ timeout: 5000 }));
+		// make sure an arg was sent aswell
+		if (!message.args[0]) return message.channel.error('misc:INCORRECT_FORMAT', { EXAMPLE: settings.prefix.concat(message.translate('plugins/rr-remove:USAGE')) }).then(m => m.delete({ timeout: 5000 }));
+
+		// fetch and validate message
+		const patt = /https?:\/\/(?:(?:canary|ptb|www)\.)?discord(?:app)?\.com\/channels\/(?:@me|(?<g>\d+))\/(?<c>\d+)\/(?<m>\d+)/g;
+		let msg;
+		if (patt.test(message.args[0])) {
+			const stuff = message.args[0].split('/');
+			try {
+				msg = await bot.guilds.cache.get(stuff[4])?.channels.cache.get(stuff[5])?.messages.fetch(stuff[6]);
+			} catch (err) {
+				if (message.deletable) message.delete();
+				bot.logger.error(`Command: '${this.help.name}' has error: ${err.message}.`);
+				return message.channel.error('misc:ERROR_MESSAGE', { ERROR: err.message }).then(m => m.delete({ timeout: 5000 }));
+			}
+		} else {
+			return message.channel.send(message.translate('plugins/rr-add:INVALID'));
 		}
 
-		const reaction = await ReactionRoleSchema.findOne({
-			guild_id: message.guild.id,
-			message_id: messageId,
-		});
-
-		if (!reaction) {
-			return message.channel.send('Reaction was not found by that messageId');
+		// delete message and then remove database
+		try {
+			await msg.delete();
+			await ReactionRoleSchema.findOneAndRemove({ messageID: msg.id,	channelID: msg.channel.id });
+			message.channel.send(message.translate('plugins/rr-remove:SUCCESS'));
+		} catch (err) {
+			if (message.deletable) message.delete();
+			bot.logger.error(`Command: '${this.help.name}' has error: ${err.message}.`);
+			return message.channel.error('misc:ERROR_MESSAGE', { ERROR: err.message }).then(m => m.delete({ timeout: 5000 }));
 		}
-
-		const channel = message.guild.channels.cache.get(reaction.channel_id);
-		const msg = channel.messages.cache.get(messageId) || (await channel.messages.fetch(messageId));
-		if (!msg) return message.channel.send('Reaction was found but the message was not, reaction was deleted from the database');
-
-		msg.delete();
-		await ReactionRoleSchema.findOneAndDelete({ message_id: messageId });
-
-		return message.channel.send('Successfully deleted reaction');
 	}
 };

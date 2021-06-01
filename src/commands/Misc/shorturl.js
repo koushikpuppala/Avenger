@@ -17,16 +17,23 @@ module.exports = class ShortURL extends Command {
 	}
 
 	// Run command
-	async run(bot, message, settings) {
+	async run(bot, message) {
 		const mes = message.content.split(' ').slice(1).join(' ');
+
+		// send 'waiting' message to show bot has recieved message
+		const msg = await message.channel.send(message.translate('misc:FETCHING', {
+			EMOJI: message.checkEmoji() ? bot.customEmojis['loading'] : '', ITEM: this.help.name }), { tts: true });
+
 		try {
 			shorten(mes, function(res) {
+				msg.delete();
 				message.channel.send(res);
 			});
 		} catch (err) {
 			if (message.deletable) message.delete();
 			bot.logger.error(`Command: '${this.help.name}' has error: ${err.message}.`);
-			message.channel.error(settings.Language, 'ERROR_MESSAGE', err.message).then(m => m.delete({ timeout: 5000 }));
+			msg.delete();
+			message.channel.error('misc:ERROR_MESSAGE', { ERROR: err.message }).then(m => m.delete({ timeout: 5000 }));
 		}
 	}
 };

@@ -1,8 +1,13 @@
 /* eslint-disable no-unused-vars */
 // Dependencies
-const Client = require('./base/Avenger.js');
+const Client = require('./base/Avenger');
 require('./structures');
-const bot = new Client({ partials: ['GUILD_MEMBER', 'USER', 'MESSAGE', 'CHANNEL', 'REACTION'], fetchAllMembers: true, ws: { intents: ['GUILDS', 'GUILD_MEMBERS', 'GUILD_BANS', 'GUILD_EMOJIS', 'GUILD_MESSAGES', 'GUILD_MESSAGE_REACTIONS', 'DIRECT_MESSAGES', 'GUILD_VOICE_STATES'] } });
+const bot = new Client({
+	partials: ['GUILD_MEMBER', 'USER', 'MESSAGE', 'CHANNEL', 'REACTION'],
+	ws: {
+		intents: ['GUILDS', 'GUILD_MEMBERS', 'GUILD_BANS', 'GUILD_EMOJIS', 'GUILD_MESSAGES', 'GUILD_MESSAGE_REACTIONS', 'DIRECT_MESSAGES', 'GUILD_VOICE_STATES', 'GUILD_INVITES'],
+	},
+});
 const { promisify } = require('util');
 const fs = require('fs');
 const readdir = promisify(require('fs').readdir);
@@ -20,23 +25,14 @@ const Store = require('connect-mongo');
 const UserSchema = require('./database/models/DiscordUser');
 const SECRET = bot.config.JwtSecret;
 const fetch = require('node-fetch');
-
-// Routes
-const HomeRoute = require('./routes/home');
-const AuthRoute = require('./routes/auth');
-const StaffRoute = require('./routes/staff');
-const PartnerRoute = require('./routes/partner');
-const ServerinfoRoute = require('./routes/server-info');
-const MusicsdjRoute = require('./routes/musics_dj');
-const AvengerRoute = require('./routes/avenger');
-const SitemapRoute = require('./routes/sitemap');
+const { HomeRoute, AuthRoute, StaffRoute, PartnerRoute, ServerinfoRoute, MusicsdjRoute, AvengerRoute, SitemapRoute } = require('./routes/index');
 
 // set up rate limiter: maximum of five requests per minute
 const RateLimit = require('express-rate-limit');
 const limiter = new RateLimit({
-	// 1 minute
-	windowMs: 1 * 60 * 1000,
-	max: 5,
+	// 1 hour
+	windowMs: 60 * 60 * 1000,
+	max: 1000,
 });
 
 // apply rate limiter to all requests
@@ -82,39 +78,51 @@ app.get('/support', (req, res) => {
 });
 
 app.get('/arc-sw.js', (req, res) => {
-	res.sendFile(path.join(__dirname + '/validations/arc-sw.js'));
+	res.sendFile(path.join(__dirname + '/scripts/arc-sw.js'));
 });
 
 // Load commands
 (async () => {
 	// load commands
-	const cmdFolders = await readdir('./src/commands/');
+	const cmdFolders = (await readdir('./src/commands/')).filter((v, i, a) => a.indexOf(v) === i);
+	bot.logger.log('=-=-=-=-=-=-=- Loading command(s): 125 -=-=-=-=-=-=-=');
 	cmdFolders.forEach(async (dir) => {
-		const commandsFile = fs.readdirSync(`./src/commands/${dir}`).filter(file => file.endsWith('.js'));
 		if (bot.config.disabledPlugins.includes(dir)) return;
-		const commands = await readdir('./src/commands/' + dir + '/');
-		bot.logger.log(`=-=-=-=-=-=-=- Loading ${dir} command(s): ${commandsFile.length} -=-=-=-=-=-=-=`);
-		commands.forEach((cmd) => {
-			if (bot.config.disabledCommands.includes(cmd.replace('.js', ''))) return;
-			const resp = bot.loadCommand('./commands/' + dir, cmd);
-			if (resp) bot.logger.error(resp);
-		});
+		try {
+			const commands = (await readdir('./src/commands/' + dir + '/')).filter((v, i, a) => a.indexOf(v) === i);
+			commands.forEach((cmd) => {
+				if (bot.config.disabledCommands.includes(cmd.replace('.js', ''))) return;
+				const resp = bot.loadCommand('./commands/' + dir, cmd);
+				if (resp) bot.logger.error(resp);
+			});
+		} catch (err) {
+			console.log(err.message);
+		}
 	});
 
 	// load events
-	const evtFiles = await readdir('./src/events/');
-	bot.logger.log(`=-=-=-=-=-=-=- Loading events(s): ${evtFiles.length} -=-=-=-=-=-=-=`);
-	evtFiles.forEach(file => {
-		delete require.cache[file];
-		const { name } = path.parse(file);
-		try {
-			const event = new (require(`./events/${file}`))(bot, name);
-			bot.logger.log(`Loading Event: ${name}`);
-			bot.on(name, (...args) => event.run(bot, ...args));
-		} catch (err) {
-			bot.logger.error(`Failed to load Event: ${name} error: ${err.message}`);
-		}
+	const evtFolder = await readdir('./src/events/');
+	bot.logger.log(`=-=-=-=-=-=-=- Loading events(s): ${evtFolder.length} -=-=-=-=-=-=-=`);
+	evtFolder.forEach(async folder => {
+		const folders = await readdir('./src/events/' + folder + '/');
+		folders.forEach(async file => {
+			delete require.cache[file];
+			const { name } = path.parse(file);
+			try {
+				const event = new (require(`./events/${folder}/${file}`))(bot, name);
+				bot.logger.log(`Loading Event: ${name}`);
+				if (folder == 'giveaway') {
+					bot.giveawaysManager.on(name, (...args) => event.run(bot, ...args));
+				} else {
+					bot.on(name, (...args) => event.run(bot, ...args));
+				}
+			} catch (err) {
+				bot.logger.error(`Failed to load Event: ${name} error: ${err.message}`);
+			}
+		});
 	});
+
+	bot.translations = await require('./helpers/LanguageManager')();
 
 	// Audio player
 	try {
@@ -133,30 +141,6 @@ app.get('/arc-sw.js', (req, res) => {
 	const token = bot.config.token;
 	bot.login(token).catch(e => bot.logger.error(e.message));
 
-	let count = 0;
-	let invcount = 0;
-	let user = 0;
-	let rounds = 0;
-
-	setInterval(function() {
-		const database = JSON.parse(fs.readFileSync('./src/link.json', 'utf8'));
-		count = 0;
-		invcount = 0;
-		user = database.length;
-		rounds++;
-
-		database.forEach(m => {
-			m.link.forEach(s => {
-				count++;
-
-				fetch(s).catch(err => {
-					invcount++;
-				});
-			});
-		});
-		bot.logger.ready('Interval :)');
-	}, 240000);
-
 	// Connect bot to Dashboard
 	app.listen(PORT, function() {
 		() => {
@@ -164,10 +148,11 @@ app.get('/arc-sw.js', (req, res) => {
 		};
 	});
 
+	// handle unhandledRejection errors
 	process.on('unhandledRejection', err => {
 		bot.logger.error(`Unhandled promise rejection: ${err.message}.`);
 
 		// show full error if debug mode is on
-		if(bot.config.debug) console.log(err);
+		if (bot.config.debug) console.log(err);
 	});
 })();

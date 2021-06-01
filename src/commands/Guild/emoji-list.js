@@ -4,10 +4,10 @@ const	Command = require('../../structures/Command.js');
 module.exports = class EmojiList extends Command {
 	constructor(bot) {
 		super(bot, {
-			name: 'emojilist',
+			name: 'emoji-list',
 			guildOnly: true,
 			dirname: __dirname,
-			aliases: ['emoji-list', 'emotes'],
+			aliases: ['emojilist', 'emotes'],
 			botPermissions: ['SEND_MESSAGES', 'EMBED_LINKS'],
 			description: 'Displays the server\'s emojis',
 			usage: 'emojilist',
@@ -17,6 +17,6 @@ module.exports = class EmojiList extends Command {
 
 	// Run command
 	async run(bot, message) {
-		message.channel.send(`**${message.guild.name}'s emoji's:**\n${message.guild.emojis.cache.map(e => e.toString()).join(' ')}`);
+		message.channel.send(message.translate('guild/emoji-list:MESSAGE', { GUILD: message.guild.name, EMOJIS: message.guild.emojis.cache.map(e => e.toString()).join(' ') }));
 	}
 };

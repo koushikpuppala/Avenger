@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 const { MessageEmbed } = require('discord.js'),
 	Command = require('../../structures/Command.js'),
-	fs = require('fs');
+	LinkSchema = require('../../database/models');
 
 module.exports = class LinkStats extends Command {
 	constructor(bot) {
@@ -18,10 +18,6 @@ module.exports = class LinkStats extends Command {
 
 	async run(bot, message) {
 
-		const database = JSON.parse(fs.readFileSync('./src/link.json', 'utf8'));
-
-		if (!database) return message.channel.send('Something went wrong...').then(m => m.delete({ timeout: 5000 }));
-
 		if (message.channel.id != bot.config.SupportServer.HostChannel) {
 			message.channel.send(new MessageEmbed()
 				.setAuthor(message.author.tag, message.author.displayAvatarURL({ dynamic: true }))
@@ -33,16 +29,18 @@ module.exports = class LinkStats extends Command {
 			).then(m => m.delete({ timeout: 30000 }));
 		} else {
 
-			const data = database.find((x) => x.id === message.author.id);
+			const data = await LinkSchema.find({
+				userID: message.author.id,
+			});
 
-			if (!data) return message.channel.send(`You do not have any site to monitor, use ${bot.config.defaultSettings.prefix}add too add a website`);
+			if (!data) return message.channel.send(`You do not have any site to monitor, use ${bot.config.defaultSettings.prefix}addlink too add a website`);
 
 			const embed = new MessageEmbed()
 				.setTitle(message.author.tag, message.author.displayAvatarURL({ dynamic: true }))
-				.setAuthor(`You have ${data.link.length} Website`)
+				.setAuthor(`You have ${data.links.length} Website`)
 				.setColor('GREEN')
 				.setDescription(
-					`**<a:tick:818394472563605554> ${data.link.join('\n\n<a:tick:818394472563605554> ')}**`,
+					`**<a:tick:818394472563605554> ${data.links.join('\n\n<a:tick:818394472563605554> ')}**`,
 				)
 				.setTimestamp();
 
