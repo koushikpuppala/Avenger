@@ -1,0 +1,18 @@
+name: Avenger Docker Image CI
+
+on:
+  push:
+    branches: [ Avenger ]
+  pull_request:
+    branches: [ Avenger ]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build the Docker image
+      run: docker build . --file Dockerfile --tag avenger:$(date +%s)
