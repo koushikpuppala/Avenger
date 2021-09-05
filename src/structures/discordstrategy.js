@@ -1,46 +1,64 @@
-const DiscordStrategy = require('passport-discord').Strategy;
-const passport = require('passport');
-const UserSchema = require('../database/models/DiscordUser');
+/** @format */
 
-passport.serializeUser((user, done) => {
-	done(null, user.id);
-});
+module.exports = async (bot) => {
+	const DiscordStrategy = require('passport-discord').Strategy
+	const passport = require('passport')
+	const { userSchema } = require('../database/models')
 
-passport.deserializeUser(async (id, done) => {
-	const user = await UserSchema.findById(id);
-	if (user) {
-		done(null, user);
-	}
-});
+	passport.serializeUser((user, done) => {
+		done(null, user)
+	})
 
-passport.use(new DiscordStrategy({
-	clientID: process.env.CLIENT_ID,
-	clientSecret: process.env.CLIENT_SECRET,
-	callbackURL: process.env.CLIENT_REDIRECT,
-	scope: ['identify', 'guilds', 'email'],
-}, async (accessToken, refreshToken, profile, done) => {
-	const { id, username, guilds, avatar, email, discriminator } = profile;
-	try {
-		const user = await UserSchema.findOneAndUpdate({ discordId: id }, {
-			discordTag: `${username}#${discriminator}`, avatar, guilds, username, email,
-		}, { new: true });
+	passport.deserializeUser(async (id, done) => {
+		const user = await userSchema.findById(id)
 		if (user) {
-			done(null, user);
-		} else {
-			const newUser = await UserSchema.create({
-
-				discordId: profile.id,
-				discordTag: `${username}#${discriminator}`,
-				username: profile.username,
-				guilds: profile.guilds,
-				avatar: profile.avatar,
-				email: profile.email,
-			});
-			const saveUser = await newUser.save();
-			done(null, saveUser);
+			done(null, user)
 		}
-	} catch (err) {
-		console.log(err);
-		done(err, null);
-	}
-}));
+	})
+
+	passport.use(
+		new DiscordStrategy(
+			{
+				clientID: bot.config.botClient,
+				clientSecret: bot.config.botClientSecret,
+				callbackURL: bot.config.botClientRedirect,
+				scope: ['identify', 'guilds', 'email', 'guilds.join'],
+			},
+			async (accessToken, refreshToken, profile, done) => {
+				const { id, username, guilds, avatar, email, discriminator } = profile
+				try {
+					const user = await userSchema.findOneAndUpdate(
+						{ userID: id },
+						{
+							userTag: `${username}#${discriminator}`,
+							userAvatar: avatar,
+							userGuilds: guilds,
+							userName: username,
+							userEmail: email,
+						},
+						{ new: true }
+					)
+					if (user) {
+						done(null, user)
+					} else {
+						const newUser = await userSchema.create({
+							userID: profile.id,
+							userTag: `${username}#${discriminator}`,
+							userName: profile.username,
+							userGuilds: profile.guilds,
+							userAvatar: profile.avatar,
+							userEmail: profile.email,
+						})
+						const saveUser = await newUser.save()
+						done(null, saveUser)
+					}
+				} catch (err) {
+					console.log(err)
+					done(err, null)
+				}
+			}
+		)
+	)
+
+	return passport
+}

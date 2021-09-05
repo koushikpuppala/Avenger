@@ -1,9 +1,11 @@
-const { Schema, model } = require('mongoose');
+/** @format */
+
+const { Schema, model } = require('mongoose')
 
 const globalBanSchema = Schema({
 	userID: String,
 	reason: String,
 	IssueDate: String,
-});
+})
 
-module.exports = model('GlobalBan', globalBanSchema);
+module.exports = model('GlobalBan', globalBanSchema)

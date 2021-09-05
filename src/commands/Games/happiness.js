@@ -20,6 +20,6 @@ module.exports = class Happiness extends Command {
 			.setTitle('HAPPINESS')
 			.setDescription(`${happiness}%`);
 
-		message.channel.send(embed);
+		message.channel.send({ embeds: [embed] });
 	}
 };

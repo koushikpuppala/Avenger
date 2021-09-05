@@ -1,7 +1,7 @@
 /* eslint-disable no-shadow */
 const { MessageEmbed } = require('discord.js'),
 	Command = require('../../structures/Command.js'),
-	LinkSchema = require('../../database/models');
+	{ LinkSchema } = require('../../database/models');
 
 module.exports = class RemoveLink extends Command {
 	constructor(bot) {
@@ -62,7 +62,7 @@ module.exports = class RemoveLink extends Command {
 							.setColor('BLUE')
 							.setDescription(array.join('\n'));
 
-						const msg = channel.send(embed);
+						const msg = channel.send({ embeds: [embed] });
 
 						const responses = channel.awaitMessages(
 							(msg) => msg.author.id === message.author.id,

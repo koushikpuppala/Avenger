@@ -1,49 +1,48 @@
-const router = require('express').Router();
+/** @format */
 
-function isAuthorized(req, res, next) {
-	if (req.user) {
-		next();
-	} else {
-		res.redirect('/');
-	}
+const router = require('express').Router()
+
+module.exports = (bot, renderTemplate) => {
+	router
+		.get('/', (req, res) => {
+			const data = {
+				TITLE: 'Avengers Assemble | Avenger Bot Page',
+				DESCRIPTION: 'This is page of Avengers Discord bot of Server Avengers Assemble',
+				KEYWORDS: 'Avengers Assemble, Musics_DJ, Avenger, Discord, Discord Bot, Developers',
+				FAVICON: '/img/A.webp',
+				CANONICAL: 'https://avengers-assemble.tech/avenger',
+			}
+			renderTemplate(req, res, '200', 'Avenger.ejs', data)
+		})
+		.get('/info', (req, res) => {
+			const data = {
+				TITLE: 'Avengers Assemble | Avengers Bot Info Page',
+				DESCRIPTION: 'This is page of Avenger Discord bot info of Server Avengers Assemble',
+				KEYWORDS: 'Avengers Assemble, Musics_DJ, Avenger, Discord, Discord Bot, Developers',
+				FAVICON: '/img/A.webp',
+				CANONICAL: 'https://avengers-assemble.tech/avenger/info',
+			}
+			renderTemplate(req, res, '200', 'Avenger_Info.ejs', data)
+		})
+		.get('/commands', (req, res) => {
+			const data = {
+				TITLE: 'Avengers Assemble | Avenger Bot Commands Page',
+				DESCRIPTION:
+					'This is page of Avenger Discord bot commands of Server Avengers Assemble',
+				KEYWORDS: 'Avengers Assemble, Musics_DJ, Avenger, Discord, Discord Bot, Developers',
+				FAVICON: '/img/A.webp',
+				CANONICAL: 'https://avengers-assemble.tech/avenger/commands',
+			}
+			renderTemplate(req, res, '200', 'Avenger_Commands.ejs', data)
+		})
+		.get('/invite', (req, res) => {
+			res.redirect(
+				'https://discord.com/oauth2/authorize?client_id=775412494235729960&permissions=3757452671&redirect_uri=https%3A%2F%2Fdiscord.gg%2FMsJ99j5Bcv&response_type=code&scope=bot%20guilds.join%20applications.commands'
+			)
+		})
+		.get('/vote', (req, res) => {
+			res.redirect('https://top.gg/bot/775412494235729960')
+		})
+
+	return router
 }
-
-router.get('/', isAuthorized, (req, res) => {
-	res.render('Clusters/Avenger', {
-		username: req.user.username,
-		discordId: req.user.discordId,
-		email: req.user.email,
-		avatar: req.user.avatar,
-		TITLE: 'Avengers Assemble | Avenger',
-		DESCRIPTION: 'This is the page about my bot Avenger which is multi-purpose bot have so many type of commands fun, ecomony, moderation, etc..',
-		KEYWORDS: 'Avengers Assembele , Musics_DJ , Avenger , Discord , Discord Bot , Developers',
-		FAVICON: '../img/avengers.webp',
-		COMMANDS: 'Bot Commands',
-		COMMANDS_LINK: '/avenger/commands',
-		HOME: '/avenger',
-		RANDOM: 'Server info',
-		RANDOM_LINK: '/server-info',
-		EXTRA: '/',
-	});
-});
-
-router.get('/commands', isAuthorized, (req, res) => {
-	res.render('Commands/Avenger', {
-		username: req.user.username,
-		discordId: req.user.discordId,
-		email: req.user.email,
-		avatar: req.user.avatar,
-		TITLE: 'Avenger | Commands',
-		DESCRIPTION: 'In this page we will get full commands of Discord Bot Avenger',
-		KEYWORDS: 'Avengers Assembele , Musics_DJ , Avenger , Discord , Discord Bot , Developers',
-		FAVICON: '../img/avengers.webp',
-		HOME: '/avenger/commands',
-		COMMANDS: '',
-		COMMANDS_LINK: '',
-		RANDOM: 'Server info',
-		RANDOM_LINK: '/server-info',
-		EXTRA: '../',
-	});
-});
-
-module.exports = router;

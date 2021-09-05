@@ -1,12 +1,12 @@
 /* eslint-disable no-unused-vars */
 const { MessageEmbed } = require('discord.js'),
 	Command = require('../../structures/Command.js'),
-	LinkSchema = require('../../database/models');
+	{ LinkSchema } = require('../../database/models');
 
 module.exports = class LinkStats extends Command {
 	constructor(bot) {
 		super(bot, {
-			'name': 'linkstats',
+			name: 'linkstats',
 			dirname: __dirname,
 			aliases: ['ls'],
 			botPermissions: ['SEND_MESSAGES', 'EMBED_LINKS'],
@@ -46,7 +46,7 @@ module.exports = class LinkStats extends Command {
 
 			message.reply('Check your Dm :)').then(m => m.delete({ timeout: 5000 }));
 
-			message.author.send(embed).catch(err => {
+			message.author.send({ embeds: [embed] }).catch(err => {
 				return message.channel.send(
 					'Your dms are disabled so, please enable to get stats and try again',
 				).then(m => m.delete({ timeout: 60000 }));

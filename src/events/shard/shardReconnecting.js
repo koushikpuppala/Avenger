@@ -1,15 +1,29 @@
-// Dependencies
-const Event = require('../../structures/Event');
+/** @format */
 
-module.exports = class shardReconnecting extends Event {
+// Dependencies
+const Event = require('../../structures/Event')
+
+/**
+ * Shard reconnecting event
+ * @event Avenger#Debug
+ * @extends {Event}
+ */
+class ShardReconnecting extends Event {
 	constructor(...args) {
 		super(...args, {
 			dirname: __dirname,
-		});
+		})
 	}
 
-	// run event
+	/**
+	 * Function for receiving event.
+	 * @param {bot} bot The instantiating client
+	 * @param {number} shardID The shard id that disconnected
+	 * @readonly
+	 */
 	async run(bot, shardID) {
-		bot.logger.debug(`Shard: ${shardID} is attempting to reconnect.`);
+		bot.logger.debug(`Shard: ${shardID} is attempting to reconnect.`)
 	}
-};
+}
+
+module.exports = ShardReconnecting

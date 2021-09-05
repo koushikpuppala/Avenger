@@ -1,14 +1,21 @@
+/** @format */
+
 module.exports = {
+	ContactSchema: require('./Contact'),
+	GiveawaySchema: require('./Giveaway'),
+	GlobalBanSchema: require('./GlobalBan'),
 	GuildSchema: require('./GuildSettings'),
 	RankSchema: require('./Level'),
-	WarningSchema: require('./Warning'),
-	GlobalBanSchema: require('./GlobalBan'),
-	GiveawaySchema: require('./Giveaway'),
+	LinkSchema: require('./link'),
+	MutedMemberSchema: require('./MutedMembers'),
+	PartnerSchema: require('./PartnerShip'),
 	PlaylistSchema: require('./Playlist'),
 	PremiumSchema: require('./Premium'),
 	ReactionRoleSchema: require('./ReactionRole'),
-	timeEventSchema: require('./TimedEvents'),
-	MutedMemberSchema: require('./MutedMembers'),
-	ticketEmbedSchema: require('./TicketEmbed'),
+	StaffApplicationSchema: require('./StaffApplication'),
 	TagsSchema: require('./tag'),
-};
+	ticketEmbedSchema: require('./TicketEmbed'),
+	timeEventSchema: require('./TimedEvents'),
+	WarningSchema: require('./Warning'),
+	userSchema: require('./userSettings.js'),
+}

@@ -1,0 +1,22 @@
+<%- include('Connections/Header') %>
+	<%- include('Connections/Verify') %>
+		<%- include('Connections/Navbar') %>
+			<!-- ======= Hero Section ======= -->
+			<section id="hero"
+				style="background: url(../img/A.webp) center center no-repeat; background-size: contain;">
+				<div class="hero-container" data-aos="zoom-in" data-aos-delay="100">
+					<% if(user) { %>
+						<h1>
+							Hello, <%= user.userName %> at present this page is not completed
+						</h1>
+						<% } else { %>
+							<h1>
+								Hello, at present this page is not completed
+							</h1>
+							<% } %>
+								<h2>If you want to help me in making this page you can join my server and DM Server
+									Owner.</h2>
+				</div>
+			</section>
+			<!-- End Hero Section -->
+			<%- include('Connections/Footer') -%>

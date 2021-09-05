@@ -1,125 +1,108 @@
 /* eslint-disable no-unused-vars */
-const router = require('express').Router();
-const PartnerSchema = require('../database/models/PartnerShip');
-const { check, validationResult } = require('express-validator');
+const router = require('express').Router(),
+	{ PartnerSchema } = require('../database/models'),
+	{ check, validationResult } = require('express-validator');
 
-function isAuthorized(req, res, next) {
-	if (req.user) {
-		next();
-	} else {
-		res.redirect('/');
-	}
-}
+module.exports = (bot, renderTemplate) => {
 
-router.get('/application', isAuthorized, (req, res) => {
-	res.render('Components/Partner_Application', {
-		username: req.user.username,
-		discordId: req.user.discordId,
-		email: req.user.email,
-		avatar: req.user.avatar,
-		TITLE: 'Avengers Assemble | Partner Application',
-		DESCRIPTION: 'This is the Partner application form for Avengers Assemble Discord server',
-		KEYWORDS: 'Avengers Assembele , Musics_DJ , Avenger , Discord , Discord Bot , Developers',
-		FAVICON: '../img/A.webp',
-		OTHER_URL: '/partner',
-		OTHER: 'Partner Servers',
-		COMPONENTS: 'Server Staff',
-		MEMBER: 'Staff Members',
-		MEMBER_URL: '/staff',
-		APPLICATION: 'Staff Application',
-		APPLICATION_URL: '/staff/application',
-		HOME: '/partner/application',
-		RANDOM: 'Server info',
-		RANDOM_LINK: '/server-info',
-		EXTRA: '../',
-	});
-});
-
-router.post('/application', [
-	check('GuildId').custom(value => {
-		return PartnerSchema.findOne({ GuildId: value, VerifiedServer: false }).then(user => {
-			if (user) {
-				return Promise.reject('Already your server has been submitted partner application wait untill it get verified or contact Owner but do not spam.');
-			}
-		});
-	}),
-	check('GuildId').custom(value => {
-		return PartnerSchema.findOne({ GuildId: value, VerifiedServer: true }).then(user => {
-			if (user) {
-				return Promise.reject('Already your server is partner server with Avengers Assemble.');
-			}
-		});
-	}),
-	check('VanityURL').custom(value => {
-		return PartnerSchema.findOne({ VanityURL: value }).then(user => {
-			if (user) {
-				return Promise.reject('Already this Vanity URL is present pick another Vanity URL ');
-			}
-		});
-	}),
-	check('IsOwner').custom(value => {
-		if (value != 'Yes') {
-			return Promise.reject('You should be the owner of the server');
-		}
-	}),
-], (req, res) => {
-
-	const errors = validationResult(req);
-	if (!errors.isEmpty()) {
-		const alert = errors.array();
-		res.render('Components/Partner_Application', {
-			username: req.user.username,
-			discordId: req.user.discordId,
-			email: req.user.email,
-			avatar: req.user.avatar,
-			TITLE: 'Avengers Assemble | Partner Application',
-			DESCRIPTION: 'This is the Partner application form for Avengers Assemble Discord server',
-			KEYWORDS: 'Avengers Assembele , Musics_DJ , Avenger , Discord , Discord Bot , Developers',
-			FAVICON: '../img/A.webp',
-			OTHER_URL: '/partner',
-			OTHER: 'Partner Servers',
-			COMPONENTS: 'Server Staff',
-			MEMBER: 'Staff Members',
-			MEMBER_URL: '/staff',
-			APPLICATION: 'Staff Application',
-			APPLICATION_URL: '/staff/application',
-			HOME: '/partner/application',
-			RANDOM: 'Server info',
-			RANDOM_LINK: '/server-info',
-			EXTRA: '../',
-			alert,
-		});
-	} else {
-		const partner = PartnerSchema({
-			UserName: req.body.UserName,
-			DiscordId: req.body.DiscordId,
-			Email: req.body.Email,
-			Name: req.body.Name,
-			GuildId: req.body.GuildId,
-			InviteLink: req.body.InviteLink,
-			Description: req.body.Description,
-			VanityURL: req.body.VanityURL,
-			AboutGuild: req.body.AboutGuild,
-			IsOwner: req.body.IsOwner,
-			TermsAndConditions: req.body.TermsAndConditions,
-		});
-		partner.save(partner, (err, collection) => {
-			if (err) {
-				res.send(err);
+	router
+		.get('/', (req, res) => {
+			const data = {
+				TITLE: 'Avengers Assemble | Partner Page',
+				DESCRIPTION: 'This is the partner data page of Avengers Assemble server',
+				KEYWORDS: 'Avengers Assemble, Musics_DJ, Avenger, Discord, Discord Bot, Developers',
+				FAVICON: '/img/A.webp',
+				CANONICAL: 'https://avengers-assemble.tech/partner',
+			};
+			renderTemplate(req, res, '200', 'Partner.ejs', data);
+		})
+		.get('/servers', (req, res) => {
+			const data = {
+				TITLE: 'Avengers Assemble | Partner Servers Page',
+				DESCRIPTION: 'This is the page for partner servers of Server Avengers Assemble',
+				KEYWORDS: 'Avengers Assemble, Musics_DJ, Avenger, Discord, Discord Bot, Developers',
+				FAVICON: '/img/A.webp',
+				CANONICAL: 'https://avengers-assemble.tech/partner/servers',
+			};
+			renderTemplate(req, res, '200', 'Partner_Servers.ejs', data);
+		})
+		.get('/application', (req, res) => {
+			const data = {
+				TITLE: 'Avengers Assemble | Partner Application Page',
+				DESCRIPTION: 'This is the page for partner application of Server Avengers Assemble',
+				KEYWORDS: 'Avengers Assemble, Musics_DJ, Avenger, Discord, Discord Bot, Developers',
+				FAVICON: '/img/A.webp',
+				CANONICAL: 'https://avengers-assemble.tech/partner/application',
+			};
+			renderTemplate(req, res, '200', 'Partner_Application.ejs', data);
+		})
+		.post('/application', [
+			check('GuildId').custom(async value => {
+				const user = await PartnerSchema.findOne({ GuildId: value, VerifiedServer: false });
+				if (user) {
+					return Promise.reject('Already your server has been submitted partner application wait until it get verified or contact Owner but do not spam.');
+				}
+			}),
+			check('GuildId').custom(async value => {
+				const user = await PartnerSchema.findOne({ GuildId: value, VerifiedServer: true });
+				if (user) {
+					return Promise.reject('Already your server is partner server with Avengers Assemble.');
+				}
+			}),
+			check('VanityURL').custom(async value => {
+				const user = await PartnerSchema.findOne({ VanityURL: value });
+				if (user) {
+					return Promise.reject('Already this Vanity URL is present pick another Vanity URL ');
+				}
+			}),
+			check('IsOwner').custom(value => {
+				if (value != 'Yes') {
+					return Promise.reject('You should be the owner of the server');
+				}
+			}),
+		], (req, res) => {
+			const errors = validationResult(req);
+			if (!errors.isEmpty()) {
+				const alert = errors.array();
+				const data = {
+					alert,
+					TITLE: 'Avengers Assemble | Partner Application Page with Errors',
+					DESCRIPTION: 'This is the page for partner application of Server Avengers Assemble',
+					KEYWORDS: 'Avengers Assemble, Musics_DJ, Avenger, Discord, Discord Bot, Developers',
+					FAVICON: '/img/A.webp',
+					CANONICAL: 'https://avengers-assemble.tech/partner/application',
+				};
+				renderTemplate(req, res, '200', 'Partner_Application.ejs', data);
 			} else {
-				req.logOut();
-				res.render('submit', {
-					TITLE: 'Avengers Assemble | Form Submit',
-					DESCRIPTION: '',
-					KEYWORDS: 'Avengers Assembele , Musics_DJ , Avenger , Discord , Discord Bot , Developers',
-					FAVICON: '../img/A.webp',
-					HEADING: 'Your Appication is submitted Sucessfully and you have been logged out of session',
-					HOME_LINK: '/',
-					HOME: 'Return Login page',
-					EXTRA: '../',
+				const partner = PartnerSchema({
+					UserName: req.body.UserName,
+					DiscordId: req.body.DiscordId,
+					Email: req.body.Email,
+					Name: req.body.Name,
+					GuildId: req.body.GuildId,
+					InviteLink: req.body.InviteLink,
+					Description: req.body.Description,
+					VanityURL: req.body.VanityURL,
+					AboutGuild: req.body.AboutGuild,
+					IsOwner: req.body.IsOwner,
+					TermsAndConditions: req.body.TermsAndConditions,
+				});
+				partner.save(partner, (err, collection) => {
+					if (err) {
+						res.send(err);
+					} else {
+						const data = {
+							TITLE: 'Avengers Assemble',
+							DESCRIPTION: '',
+							KEYWORDS: 'Avengers Assemble, Musics_DJ, Avenger, Discord, Discord Bot, Developers',
+							FAVICON: '/img/A.webp',
+							CANONICAL: 'https://avengers-assemble.tech/',
+						};
+						renderTemplate(req, res, '200', 'Submit.ejs', data);
+					}
 				});
 			}
 		});
-	}
-});
-module.exports = router;
+
+	return router;
+};

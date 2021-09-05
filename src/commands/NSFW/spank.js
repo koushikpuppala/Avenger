@@ -23,7 +23,7 @@ module.exports = class Spank extends Command {
 				.then(res => {
 					const embed = new MessageEmbed()
 						.setImage(res.data.message);
-					message.channel.send(embed);
+					message.channel.send({ embeds: [embed] });
 				});
 		} catch (err) {
 			if (message.deletable) message.delete();

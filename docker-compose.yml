@@ -1,0 +1,19 @@
+version: '3.9'
+services:
+    lavalink:
+        image: koushikpuppala/lavalink:2.0.0
+        ports:
+            - 2333:2333
+        networks:
+            - Discord
+
+    avenger:
+        build: .
+        ports:
+            - 8080:8080
+        networks:
+            - Discord
+
+networks:
+    Discord:
+        driver: bridge

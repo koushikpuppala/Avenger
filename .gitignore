@@ -1,2 +1,9 @@
 node_modules
-.env
+Lavalink/logs
+src/commands/Host/test.js
+src/http/
+src/utils/logs/roll-????.??.??.log
+jsdocs/
+client
+.github/workflows/firebase*
+src/config.js

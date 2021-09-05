@@ -1,16 +1,30 @@
-// Dependencies
-const	Event = require('../../structures/Event');
+/** @format */
 
-module.exports = class Raw extends Event {
+// Dependencies
+const Event = require('../../structures/Event')
+
+/**
+ * Raw event
+ * @event Avenger#Raw
+ * @extends {Event}
+ */
+class Raw extends Event {
 	constructor(...args) {
 		super(...args, {
 			dirname: __dirname,
-		});
+		})
 	}
 
-	// run event
+	/**
+	 * Function for receiving event.
+	 * @param {bot} bot The instantiating client
+	 * @param {data} data The raw data from discord itself
+	 * @readonly
+	 */
 	async run(bot, data) {
 		// Used for the music plugin
-		bot.manager.updateVoiceState(data);
+		bot.manager?.updateVoiceState(data)
 	}
-};
+}
+
+module.exports = Raw

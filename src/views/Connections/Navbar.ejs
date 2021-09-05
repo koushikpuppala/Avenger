@@ -1,0 +1,116 @@
+<!-- @format -->
+
+<header id="header" class="fixed-top d-flex align-items-center header-transparent">
+	<div class="container d-flex align-items-center justify-content-lg-between">
+		<a href="#hero" class="logo me-auto me-lg-0">
+			<img
+				style="border-radius: 50%; width: 50px"
+				src="/img/A.webp"
+				alt="Avengers Assemble Logo"
+				class="img-fluid"
+			/>
+		</a>
+
+		<nav id="navbar" class="navbar order-last order-lg-0">
+			<ul>
+				<li>
+					<a class="nav-link scrollto" href="/"
+						><span class="bi bi-house-fill"> Home</span></a
+					>
+				</li>
+				<li>
+					<a class="nav-link scrollto" href="/support"
+						><span class="bi bi-discord"> Discord</span></a
+					>
+				</li>
+				<li class="dropdown">
+					<a href="/bots"
+						><span class="bi bi-broadcast"> Server Bots</span
+						><i class="bi bi-chevron-down"></i
+					></a>
+					<ul>
+						<li class="dropdown">
+							<a href="/musics_dj"
+								><span>Musics_DJ Bot</span><i class="bi bi-chevron-right"></i
+							></a>
+							<ul>
+								<li><a href="/musics_dj/info">Musics_DJ Home</a></li>
+								<li><a href="/musics_dj/commands">Musics_DJ Commands</a></li>
+								<li><a href="/musics_dj/invite">Musics_DJ Invite</a></li>
+								<li><a href="/musics_dj/vote">Musics_DJ Vote</a></li>
+							</ul>
+						</li>
+						<li class="dropdown">
+							<a href="/avenger"
+								><span>Avenger Bot</span><i class="bi bi-chevron-right"></i
+							></a>
+							<ul>
+								<li><a href="/avenger/info">Avenger Home</a></li>
+								<li><a href="/avenger/commands">Avenger Commands</a></li>
+								<li><a href="/avenger/invite">Avenger Invite</a></li>
+								<li><a href="/avenger/vote">Avenger Vote</a></li>
+							</ul>
+						</li>
+					</ul>
+				</li>
+				<li class="dropdown">
+					<a href="/partner"
+						><span class="bi bi-award"> Partner</span><i class="bi bi-chevron-down"></i
+					></a>
+					<ul>
+						<li><a href="/partner/servers">Partner Servers</a></li>
+						<li><a href="/partner/application">Partner Application</a></li>
+					</ul>
+				</li>
+				<li class="dropdown">
+					<a href="/staff"
+						><span class="bi bi-people-fill"> Staff</span
+						><i class="bi bi-chevron-down"></i
+					></a>
+					<ul>
+						<li><a href="/staff/members">Staff Members</a></li>
+						<li><a href="/staff/application">Staff Application</a></li>
+					</ul>
+				</li>
+			</ul>
+			<i class="bi bi-list mobile-nav-toggle"></i>
+		</nav>
+
+		<% if(user){ %>
+		<div class="navbar">
+			<ul class="nav-ul">
+				<li class="dropdown">
+					<span class="get-started-btn">
+						<img
+							src="https://cdn.discordapp.com/avatars/<%= user.userID %>/<%= user.userAvatar %>"
+							style="border-radius: 50%; width: 35px"
+							alt="<%= user.userName %>"
+						/>
+						<%= user.userName %>
+					</span>
+					<ul>
+						<li>
+							<a href="/profile"
+								><span class="bi bi-person-bounding-box"> Profile</span></a
+							>
+						</li>
+						<li>
+							<a href="/feedback"><span class="bi bi-rss"> Feedback</span></a>
+						</li>
+						<li>
+							<a href="/report"><span class="bi bi-bug-fill"> Report Bug</span></a>
+						</li>
+						<li>
+							<a href="/logout"><span class="bi bi-box-arrow-left"> Logout</span></a>
+						</li>
+					</ul>
+				</li>
+			</ul>
+		</div>
+		<%} else{ %>
+		<a href="/auth" class="get-started-btn">
+			<span class="bi bi-box-arrow-in-right"> Discord Login</span>
+		</a>
+		<%} %>
+	</div>
+</header>

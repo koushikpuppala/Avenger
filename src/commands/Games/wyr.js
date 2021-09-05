@@ -23,7 +23,7 @@ module.exports = class WYR extends Command {
 			.setTitle('Would you rather?' + 'qsdklhqlksdsh')
 			.setDescription(`**${reply}**`);
 
-		message.channel.send(embed);
+		message.channel.send({ embeds: [embed] });
 	}
 
 };

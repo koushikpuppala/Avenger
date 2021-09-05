@@ -1,7 +1,7 @@
 // Dependencies
 const { MessageEmbed } = require('discord.js'),
 	Command = require('../../structures/Command.js'),
-	permissions = require('../../utils/permissions.json');
+	permissions = require('../../assets/json/permissions.json');
 
 module.exports = class Permission extends Command {
 	constructor(bot) {
@@ -38,7 +38,7 @@ module.exports = class Permission extends Command {
 			.setFooter(message.member.displayName, message.author.displayAvatarURL({ dynamic: true }))
 			.setTimestamp()
 			.setColor(member.displayHexColor);
-		message.channel.send(embed);
+		message.channel.send({ embeds: [embed] });
 	}
 
 };

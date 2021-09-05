@@ -1,11 +1,11 @@
 const { MessageEmbed } = require('discord.js'),
 	Command = require('../../structures/Command.js'),
-	LinkSchema = require('../../database/models');
+	{ LinkSchema } = require('../../database/models');
 
 module.exports = class AddLink extends Command {
 	constructor(bot) {
 		super(bot, {
-			'name': 'addlink',
+			name: 'addlink',
 			dirname: __dirname,
 			aliases: ['al', 'monitor'],
 			botPermissions: ['SEND_MESSAGES', 'EMBED_LINKS'],
@@ -31,29 +31,33 @@ module.exports = class AddLink extends Command {
 
 			if (!this.isURL(message.args[0])) return message.channel.send('Given Url is invalid, Make sure you send working URL').then(m => m.delete({ timeout: 5000 }));
 
-			const check = await LinkSchema.find({
+			const check = LinkSchema.findOne({
 				userID: message.author.id,
 			});
 
-			if (check) {
-				if (check.links.length === 5) {
-					return message.channel.send(new MessageEmbed()
-						.setTitle(message.author.tag, message.author.displayAvatarURL({ dynamic: true }))
-						.setDescription('You reached your limit, you can not add more than 5 website.')
-						.setTimestamp(),
-					).then(m => m.delete({ timeout: 60000 }));
-				} else {
-					await LinkSchema.findOneAndUpdate({
-						userID: message.author.id,
-					}, {
-						$addToSet: {
-							links: message.args[0],
-						},
-						$set: {
-							userName: message.author.tag,
-						},
-					});
-				}
+			if (check.count() > 0) {
+				LinkSchema.findOneAndUpdate({
+					userID: message.author.id,
+				}, {
+					$addToSet: {
+						links: message.args[0],
+					},
+					$set: {
+						userName: message.author.tag,
+					},
+				}).then((err, collection) => {
+					if (err) {
+						bot.logger.error(err);
+					} else {
+						bot.logger.posted(`${message.author.tag} add a Website to Ping`)
+					}
+				});
+				message.channel.send(new MessageEmbed()
+					.setTitle(message.author.tag, message.author.displayAvatarURL({ dynamic: true }))
+					.setColor('GREEN')
+					.setDescription('Added Your Website to monitoring')
+					.setTimestamp(),
+				).then(m => m.delete({ timeout: 60000 }));
 			} else {
 				try {
 					const database = new LinkSchema({
@@ -61,19 +65,26 @@ module.exports = class AddLink extends Command {
 						userName: message.author.tag,
 						links: message.args[0],
 					});
-					await database.save();
+					database.save(database, (err, collection) => {
+						if (err) {
+							bot.logger.error(err);
+						} else {
+							bot.logger.posted(`${message.author.tag} newly add a Website to Ping`)
+						}
+					});
 					message.channel.send(new MessageEmbed()
 						.setTitle(message.author.tag, message.author.displayAvatarURL({ dynamic: true }))
 						.setColor('GREEN')
 						.setDescription('Added Your Website to monitoring')
 						.setTimestamp(),
 					).then(m => m.delete({ timeout: 60000 }));
-				} catch(err) {
+				} catch (err) {
 					if (message.deletable) message.delete();
 					bot.logger.error(`Command: '${this.help.name}' has error: ${err.message}.`);
 					message.channel.error(settings.Language, 'ERROR_MESSAGE', err.message).then(m => m.delete({ timeout: 5000 }));
 				}
 			}
+
 		}
 	}
 };

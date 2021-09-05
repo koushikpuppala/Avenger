@@ -1,18 +1,18 @@
-// Dependecies
+// Dependencies
 const Command = require('../../structures/Command.js');
 
-module.exports = class Setperfix extends Command {
+module.exports = class SetPrefix extends Command {
 	constructor(bot) {
 		super(bot, {
-			name: 'setprefix',
+			name: 'set-prefix',
 			dirname: __dirname,
-			aliases: ['setpre', 'set-prefix'],
+			aliases: ['prefix'],
 			userPermissions: ['MANAGE_GUILD'],
 			botPermissions: [ 'SEND_MESSAGES', 'EMBED_LINKS'],
 			description: 'Change prefix for the bot.',
-			usage: 'setprefix <new prefix>',
+			usage: 'set-prefix <new prefix>',
 			cooldown: 5000,
-			examples: ['setprefix a!'],
+			examples: ['set-prefix a!'],
 		});
 	}
 
@@ -23,9 +23,11 @@ module.exports = class Setperfix extends Command {
 
 		// Delete message
 		if (settings.ModerationClearToggle & message.deletable) message.delete();
+		// Get user
+		const member = await message.getMember();
 
-		// Make sure user can edit server plugins
-		if (!message.member.hasPermission('MANAGE_GUILD')) return message.channel.error(settings.Language, 'USER_PERMISSION', 'MANAGE_GUILD').then(m => m.delete({ timeout: 10000 }));
+		// Make sure user can ban users
+		if (!member.permissions.has('MANAGE_ROLES')) return message.channel.error(settings.Language, 'USER_PERMISSION', 'MANAGE_ROLES').then(m => m.delete({ timeout: 10000 }));
 
 		// Make sure a Prefix was entered
 		if (!message.args[0]) return message.channel.error(settings.Language, 'INCORRECT_FORMAT', settings.prefix.concat(this.help.usage)).then(m => m.delete({ timeout: 5000 }));

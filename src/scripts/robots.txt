@@ -1,0 +1,13 @@
+# Group 1
+User-agent: Googlebot
+Disallow: /nogooglebot/
+
+# Group 2
+User-agent: *
+Allow: /
+
+User-agent: Twitterbot
+Disallow: *
+
+Sitemap: https://avengers-assemble.tech/sitemap.xml
+Sitemap: https://www.avengers-assemble.tech/sitemap.xml

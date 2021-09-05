@@ -1,0 +1,175 @@
+<footer id="footer">
+	<div class="footer-top">
+		<div class="container">
+			<div class="row">
+				<div class="single-item col-lg-4 col-md-6 col-12">
+					<div class="footer-top-header-1">
+						<h2>Avengers Assemble</h2>
+					</div>
+					<div class="footer-top-content">
+						<p>
+							This is Support Server for Bots.For hosting bot and Vanity URL join server and contact
+							owner.
+						</p>
+					</div>
+					<div class="footer-top-links-1">
+						<a href="https://avengers-assemble.tech/support" target="blank">
+							<span class="bi bi-discord"> avengers-assemble.tech/support</span>
+						</a>
+					</div>
+					<div class="footer-top-links-1">
+						<a href="mailto:contact@avengers-assemble.tech">
+							<span class="bi bi-envelope"> contact@avengers-assemble.tech</span>
+						</a>
+					</div>
+				</div>
+				<div class="single-item col-lg-4 col-md-6 col-12">
+					<div class="footer-top-header-2">
+						<h2>Highlights Pages</h2>
+					</div>
+					<div class="dropend footer-top-links-3">
+						<a href="/musics_dj">
+							<span class="bi bi-broadcast"> Musics_DJ</span>
+						</a>
+					</div>
+					<div class="dropend footer-top-links-3">
+						<a href="/avenger">
+							<span class="bi bi-broadcast"> Avenger</span>
+						</a>
+					</div><br />
+					<div class="dropend footer-top-links-3">
+						<a href="/partner">
+							<span class="bi bi-award"> Partner</span>
+						</a>
+					</div>
+					<div class="dropend footer-top-links-3">
+						<a href="/staff">
+							<span class="bi bi-people-fill"> Staff</span>
+						</a>
+					</div>
+				</div>
+				<div class="single-item col-lg-4 col-md-6 col-12">
+					<div class="footer-top-header-3">
+						<h2>Support Us</h2>
+					</div>
+					<div class="footer-top-links-3">
+						<a href="https://koushikpuppala.live">
+							<span class="bi bi-code-slash"> Developer</span>
+						</a>
+					</div>
+					<div class="footer-top-links-3">
+						<a href="https://github.com/koushikpuppala">
+							<span class="bi bi-github"> GitHub</span>
+						</a>
+					</div><br />
+					<div class="footer-top-links-3">
+						<a href="https://avengers-assemble.tech/support">
+							<span class="bi bi-discord"> Support Server</span>
+						</a>
+					</div>
+					<p type="button" class="footer-top-links-3" data-bs-toggle="modal" data-bs-target="#exampleModal">
+						<span class="bi bi-chat-right-dots"> Contact Us</span>
+					</p>
+					<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+						aria-hidden="true">
+						<div class="modal-dialog">
+							<div class="modal-content">
+								<div class="modal-header">
+									<h5 class="modal-title" id="exampleModalLabel">
+										Contact Us
+									</h5>
+									<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+									</button>
+								</div>
+								<div class="modal-body">
+									<div class="form">
+										<form action="/server-info" method="POST">
+											<% if(user) { %>
+											<div class="form-group mt-3">
+												<input type="hidden" name="Email" id="Email" value="<%= user.userEmail %>" />
+												<input type="hidden" name="DiscordId" id="DiscordId"
+													value="<%= user.userID %>" />
+												<input type="hidden" name="UserName" id="UserName"
+													value="<%= user.userName %>" />
+											</div>
+											<% } else { %>
+												<div class="form-floating mb-3">
+													<input type="text" class="form-control" name="Email" id="floatingInput"
+														placeholder="Name" required />
+													<label for="floatingInput">
+														Your Discord Email
+													</label>
+												</div>
+												<div class="form-floating mb-3">
+													<input type="text" class="form-control" name="DiscordId" id="floatingInput"
+														placeholder="Name" required />
+													<label for="floatingInput">
+														Your DiscordId
+													</label>
+												</div>
+												<div class="form-floating mb-3">
+													<input type="text" class="form-control" name="UserName" id="floatingInput"
+														placeholder="Name" required />
+													<label for="floatingInput">
+														Your Discord UserName
+													</label>
+												</div>
+											<% } %>
+											<div class="form-floating mb-3">
+												<input type="text" class="form-control" name="Name" id="floatingInput"
+													placeholder="Name" required />
+												<label for="floatingInput">
+													Your Name
+												</label>
+											</div>
+											<div class="form-floating mb-3">
+												<input type="text" class="form-control" name="Subject"
+													id="floatingInput" placeholder="Subject" required />
+												<label for="floatingInput">
+													Subject
+												</label>
+											</div>
+											<div class="form-floating mb-3">
+												<textarea class="form-control" name="Message" placeholder="Message"
+													id="floatingTextarea2" style="height: 100px" required></textarea>
+												<label for="floatingTextarea2">
+													Message
+												</label>
+											</div>
+											<div class="text-center">
+												<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+													Close
+												</button>
+												<button type="submit" class="btn btn-outline-info">
+													Send
+												</button>
+											</div>
+										</form>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="footer-bottom">
+		<div class="container">
+			<div class="copyright">
+				2021 Copyright &copy; Avengers Assemble. All Rights Reserved
+			</div>
+			<div class="credits">
+				Designed by <a href="https://koushikpuppala.live/"><strong>Koushikpuppala</strong></a>
+			</div>
+		</div>
+	</div>
+</footer>
+<a href="#header" class="back-to-top d-flex align-items-center justify-content-center">
+	<i class="bi bi-arrow-up-short"></i>
+</a>
+<script src='/scripts/index.min.js'></script>
+<script src="/scripts/main.js"></script>
+</body>
+
+</html>

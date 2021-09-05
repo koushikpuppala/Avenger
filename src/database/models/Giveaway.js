@@ -1,4 +1,6 @@
-const { Schema, model } = require('mongoose');
+/** @format */
+
+const { Schema, model } = require('mongoose')
 
 const giveawaySchema = Schema({
 	messageID: String,
@@ -12,6 +14,6 @@ const giveawaySchema = Schema({
 	prize: String,
 	hostedBy: String,
 	messages: Schema.Types.Mixed,
-});
+})
 
-module.exports = model('Giveaway', giveawaySchema);
+module.exports = model('Giveaway', giveawaySchema)

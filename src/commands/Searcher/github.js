@@ -42,7 +42,7 @@ module.exports = class GitHub extends Command {
 			.setThumbnail(body.owner.avatar_url)
 			.setDescription(`${body.description || 'No Description.'}\n\n❯ **Language:** ${body.language}\n❯ **Forks:** ${body.forks_count.toLocaleString()}\n❯ **License:** ${license}\n❯ **Open Issues:** ${body.open_issues.toLocaleString()}\n❯ **Watchers:** ${body.subscribers_count.toLocaleString()}\n❯ **Stars:** ${body.stargazers_count.toLocaleString()}\n❯ **Clone Size:** ${size}${footer.length ? `\n${footer.join('\n')}` : ''}`);
 
-		message.channel.send(embed);
+		message.channel.send({ embeds: [embed] });
 	}
 
 };

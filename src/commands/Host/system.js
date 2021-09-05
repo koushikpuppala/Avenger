@@ -96,6 +96,6 @@ module.exports = class Status extends Command {
 		}
 		embed.addField('Bot Stats:', `Uptime: ${bot.timeFormatter.getReadableTime(bot.uptime)}.`);
 		embed.setTimestamp();
-		message.channel.send(embed);
+		message.channel.send({ embeds: [embed] });
 	}
 };

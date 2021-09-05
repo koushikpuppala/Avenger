@@ -28,8 +28,8 @@ module.exports = class Update extends Command {
 			for (let i = 0; i < guild.channels.cache.array().length; i++) {
 				try {
 					if (!['voice', 'category', 'news', 'store', 'unknown'].includes(guild.channels.cache.array()[i].type)) {
-						embed.setFooter(`Turn off notifications by running ${guild.settings.prefix}notifs off`);
-						guild.channels.cache.array()[i].send(embed);
+						embed.setFooter(`Turn off notifications by running ${guild.settings.prefix}notifies off`);
+						guild.channels.cache.array()[i].send({ embeds: [embed] });
 						break;
 					}
 				} catch (e) {

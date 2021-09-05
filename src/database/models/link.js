@@ -8,8 +8,10 @@ const linkSchema = Schema({
 		type: String,
 	},
 	links: {
-		type: Array,
-	}
+		type: [{
+			type: String,
+		}],
+	},
 });
 
 module.exports = model('Link', linkSchema);

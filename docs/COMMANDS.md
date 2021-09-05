@@ -80,6 +80,30 @@
 | wyr	|	Would you rather	|	`wyr`	|
 
 
+## Guild
+|	Command	| description	| Usage
+|---------------|--------------------|--------------|
+| avatar	|	Displays user's avatar.	|	`avatar [user]`	|
+| dashboard	|	Sends a link to your Server's dashboard.	|	`dashboard`	|
+| discrim	|	Discrim	|	`discrim [discriminator]`	|
+| emoji-list	|	Displays the server's emojis	|	`emojilist`	|
+| firstmessage	|	Gets the first message from the channel.	|	`firstmessage [channel]`	|
+| guildicon	|	Get the server's icon.	|	`guildicon`	|
+| poll	|	Create a poll for users to answer.	|	`poll <question>`	|
+| role-info	|	Get information on a role.	|	`role-info <role>`	|
+| server-info	|	Get information on the server.	|	`server-info`	|
+| user-info	|	Get information on the server.	|	`user-info [user]`	|
+
+
+## Giveaway
+|	Command	| description	| Usage
+|---------------|--------------------|--------------|
+| g-delete	|	Delete a giveaway	|	`g-delete <messageID>`	|
+| g-edit	|	Edit a giveaway.	|	`g-edit <messageID> <AddedTime> <newWinnerCount> <NewPrize>`	|
+| g-reroll	|	reroll a giveaway.	|	`g-reroll <messageID> [winners]`	|
+| g-start	|	Start a giveaway	|	`g-start <time> <Number of winners> <prize>`	|
+
+
 ## Host
 |	Command	| description	| Usage
 |---------------|--------------------|--------------|
@@ -91,8 +115,10 @@
 | node	|	Add/remove a Node for lavalink.	|	`node <add / remove> [host] [password] [port]`	|
 | premium	|	Add or remove user's premium	|	`premium <add / remove> <user / guild> <ID> [time]`	|
 | reload	|	Reloads a command.	|	`reload <command / event>`	|
+| server	|	Displays a list of Avenger joined servers.	|	`server`	|
 | shutdown	|	Shutdowns the bot.	|	`shutdown`	|
 | system	|	Displays the bots statistics	|	`status`	|
+| test	|	For testing new commands	|	`test`	|
 | update	|	Sends an update to bot's guild.	|	`update`	|
 
 
@@ -112,34 +138,41 @@
 | uptime	|	Gets the uptime of the bot.	|	`uptime`	|
 
 
-## Guild
+## Invites
 |	Command	| description	| Usage
 |---------------|--------------------|--------------|
-| avatar	|	Displays user's avatar.	|	`avatar [user]`	|
-| dashboard	|	Sends a link to your Server's dashboard.	|	`dashboard`	|
-| discrim	|	Discrim	|	`discrim <discriminator>`	|
-| emoji-list	|	Displays the server's emojis	|	`emojilist`	|
-| firstmessage	|	Gets the first message from the channel.	|	`firstmessage [channel]`	|
-| guildicon	|	Get the server's icon.	|	`guildicon`	|
-| poll	|	Create a poll for users to answer.	|	`poll <question>`	|
-| role-info	|	Get information on a role.	|	`role-info <role>`	|
-| server-info	|	Get information on the server.	|	`server-info`	|
-| user-info	|	Get information on the server.	|	`user-info [user]`	|
-
-
-## Giveaway
-|	Command	| description	| Usage
-|---------------|--------------------|--------------|
-| g-delete	|	Delete a giveaway	|	`g-delete <messageID>`	|
-| g-edit	|	Edit a giveaway.	|	`g-edit <messageID> <AddedTime> <newWinnerCount> <NewPrize>`	|
-| g-reroll	|	reroll a giveaway.	|	`g-reroll <messageID>`	|
-| g-start	|	Start a giveaway	|	`g-start <time> <Number of winners> <prize>`	|
+| topinvites	|	Shows the top invites in a server.	|	`topinvites`	|
 
 
 ## Level
 |	Command	| description	| Usage
 |---------------|--------------------|--------------|
 | leaderboard	|	Displays the Servers's level leaderboard.	|	`leaderboard`	|
+| rank	|	Shows your rank/Level.	|	`level [username]`	|
+
+
+## Moderation
+|	Command	| description	| Usage
+|---------------|--------------------|--------------|
+| addrole	|	Adds a role to someone	|	`addrole <user mention/ID> <role mention/ID> [reason]`	|
+| ban	|	Ban a user.	|	`ban <user> [reason] [time]`	|
+| clear-warning	|	Remove warnings from a user.	|	`clear-warning <user> [warning number]`	|
+| clear	|	Clear a certain amount of messages.	|	`clear <Number> [member]`	|
+| deafen	|	Deafen a user.	|	`deafen <user>`	|
+| dm	|	DM a user	|	`dm <user> <message>`	|
+| kick	|	Kick a user.	|	`kick <user> [reason]`	|
+| mute	|	Mute a user.	|	`mute <user> [time]`	|
+| nick	|	Change the nickname of a user.	|	`nick <user> <name>`	|
+| permission	|	Displays all current permissions for the specified user.
+If no user is given, your own permissions will be displayed	|	`permission [user mention/ID]`	|
+| removerole	|	Removes a role from someone	|	`removerole <user mention/ID> <role mention/ID> [reason]`	|
+| report	|	Report a user.	|	`report <user> [reason]`	|
+| slowmode	|	Activate slowmode on a channel.	|	`slowmode <time / off>`	|
+| unban	|	Unban a user.	|	`unban <userID> [reason]`	|
+| undeafen	|	Undeafen a user.	|	`undeafen <user>`	|
+| unmute	|	Unmute a user.	|	`unmute <user>`	|
+| warn	|	Warn a user.	|	`warn <user> [time] [reason]`	|
+| warnings	|	Display number of warnings a user has.	|	`warnings [user]`	|
 
 
 ## Music
@@ -167,7 +200,7 @@
 | play	|	Play a song.	|	`play <link / song name>`	|
 | previous	|	Displays the previous tracks that have been played.	|	`previous [pageNumber]`	|
 | queue	|	Displays the queue.	|	`queue [pageNumber]`	|
-| radio	|	Listen to the radio	|	`radio`	|
+| radio	|	Listen to the radio	|	`radio <query>`	|
 | remove	|	Removes a song from the queue	|	`remove <position> [position]`	|
 | resume	|	Resumes the music.	|	`resume`	|
 | rewind	|	Rewinds the player by your specified amount.	|	`rewind <time>`	|
@@ -178,34 +211,6 @@
 | speed	|	Sets the player's playback speed.	|	`speed <Number>`	|
 | vaporwave	|	Toggles vaporwave mode.	|	`vaporwave`	|
 | volume	|	Changes the volume of the song	|	`volume <Number>`	|
-
-
-## Invites
-|	Command	| description	| Usage
-|---------------|--------------------|--------------|
-| topinvites	|	Shows the top invites in a server.	|	`topinvites`	|
-
-
-## Moderation
-|	Command	| description	| Usage
-|---------------|--------------------|--------------|
-| addrole	|	Adds a role to someone	|	`addrole <user mention/ID> <role mention/ID> [reason]`	|
-| ban	|	Ban a user.	|	`ban <user> [reason] [time]`	|
-| clear-warning	|	Remove warnings from a user.	|	`clear-warning <user> [warning number]`	|
-| clear	|	Clear a certain amount of messages.	|	`clear <Number> [member]`	|
-| deafen	|	Deafen a user.	|	`deafen <user> [time]`	|
-| dm	|	DM a user	|	`dm <user> <message>`	|
-| kick	|	Kick a user.	|	`kick <user> [reason]`	|
-| mute	|	Mute a user.	|	`mute <user> [time]`	|
-| nick	|	Change the nickname of a user.	|	`nick <user> <name>`	|
-| removerole	|	Removes a role from someone	|	`removerole <user mention/ID> <role mention/ID> [reason]`	|
-| report	|	Report a user.	|	`report <user> [reason]`	|
-| slowmode	|	Activate slowmode on a channel.	|	`slowmode <time / off>`	|
-| unban	|	Unban a user.	|	`unban <userID> [reason]`	|
-| undeafen	|	Undeafen a user.	|	`undeafen <user>`	|
-| unmute	|	Unmute a user.	|	`unmute <user>`	|
-| warn	|	Warn a user.	|	`warn <user> [time] [reason]`	|
-| warnings	|	Display number of warnings a user has.	|	`warnings [user]`	|
 
 
 ## NSFW
@@ -240,6 +245,19 @@
 | setprefix	|	Change prefix for the bot.	|	`setprefix <new prefix>`	|
 
 
+## Reactions
+|	Command	| description	| Usage
+|---------------|--------------------|--------------|
+| rr-add	|	Create a reaction role	|	`rr-add [channelID]`	|
+| rr-remove	|	Make reaction roles	|	`reactionroles <messagelink>`	|
+
+
+## Reminders
+|	Command	| description	| Usage
+|---------------|--------------------|--------------|
+| reminder	|	Set a reminder.	|	`reminder <time> <information>`	|
+
+
 ## Searcher
 |	Command	| description	| Usage
 |---------------|--------------------|--------------|
@@ -250,16 +268,8 @@
 | mc	|	Pings a minecraft for information.	|	`mc <IP> [Port]`	|
 | npm	|	Search the NPM Registry for a package information	|	`npm <package>`	|
 | npmpkgsize	|	Shows the install/publish size of a npm package.	|	`npmpkgsize <package>`	|
-| r6	|	Gets statistics on a Rainbow 6 Account.	|	`r6 <user> [pc / xbox / ps4] [eu / na / as]`	|
 | twitch	|	Get information on a twitch account.	|	`twitch <user>`	|
 | weather	|	Look up the weather in a certain area.	|	`weather <location>`	|
-
-
-## Reactions
-|	Command	| description	| Usage
-|---------------|--------------------|--------------|
-| rr-add	|	Create a reaction role	|	`rr-add [channelID]`	|
-| rr-remove	|	Make reaction roles	|	`reactionroles <messagelink>`	|
 
 
 ## Tags
@@ -272,13 +282,6 @@
 | tags	|	Edit server's tags	|	`tag <add/del/edit/view> <required paramters>`	|
 
 
-## Utils
-|	Command	| description	| Usage
-|---------------|--------------------|--------------|
-| hastebin	|	Upload some code to hastebin.	|	`hastebin <code>`	|
-| wikipedia	|	Finds a Wikipedia Article by title.	|	`wikipedia <query>`	|
-
-
 ## Ticket
 |	Command	| description	| Usage
 |---------------|--------------------|--------------|
@@ -288,9 +291,9 @@
 | ticket	|	Information on ticket plugin.	|	`ticket`	|
 
 
-## Reminders
+## Utils
 |	Command	| description	| Usage
 |---------------|--------------------|--------------|
-| reminders	|	All your active reminders	|	`reminders`	|
-| setreminder	|	Set a reminder.	|	`setreminder <time> <information>`	|
+| hastebin	|	Upload some code to hastebin.	|	`hastebin <code>`	|
+| wikipedia	|	Finds a Wikipedia Article by title.	|	`wikipedia <query>`	|
 

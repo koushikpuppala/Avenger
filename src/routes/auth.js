@@ -1,29 +1,23 @@
 /* eslint-disable no-unused-vars */
-const router = require('express').Router();
-const passport = require('passport');
+const router = require("express").Router(),
+	passport = require("passport");
 
-router.get('/', passport.authenticate('discord'));
+module.exports = (bot) => {
+	router.get(
+		"/",
+		passport.authenticate("discord", {
+			failureRedirect: "/auth_failure",
+		}),
+		(req, res) => {
+			if (req.session.backURL) {
+				const url = req.session.backURL;
+				req.session.backURL = null;
+				res.redirect(url);
+			} else {
+				res.redirect('/');
+			}
+		}
+	);
 
-router.get('/redirect', passport.authenticate('discord', {
-	failureRedirect: '/forbidden',
-	successRedirect: '/server-info',
-}));
-
-router.get('/logout', (req, res) => {
-	if (req.user) {
-		req.logOut();
-		res.redirect('/');
-	} else {
-		res.redirect('/');
-	}
-});
-
-function isAuthorized(req, res, next) {
-	if (req.user) {
-		next();
-	} else {
-		res.redirect('/');
-	}
-}
-
-module.exports = router;
+	return router;
+};

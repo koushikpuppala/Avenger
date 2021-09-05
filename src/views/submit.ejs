@@ -1,60 +1,20 @@
-<!DOCTYPE html>
-<html lang="en">
+<%- include('Connections/Header') %>
+	<%- include('Connections/Verify') %>
+		<%- include('Connections/Navbar') %>
 
-<head>
-    <meta charset="utf-8" />
-    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+			<section id="hero" style="background: url(../img/submit.webp); background-size: 100%;">
+				<div class="hero-container" data-aos="zoom-in" data-aos-delay="100">
+					<h1>Your Form Submitted Successfully</h1>
+					<button onclick="window.history.back()" type="button"
+						class="hvr-float-shadow btn btn-outline-success">
+						<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+							class="bi bi-arrow-left-circle-fill" viewBox="0 0 16 16">
+							<path
+								d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0zm3.5 7.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5z" />
+						</svg>
+						Go Back
+					</button>
+				</div>
+			</section>
 
-    <title>
-        <%= TITLE %>
-    </title>
-    <meta content="<%= DESCRIPTION %>" name="description" />
-    <meta content="<%= KEYWORDS %>" name="keywords" />
-
-    <!-- Favicons -->
-    <link href="<%= FAVICON %>" rel="icon" />
-    <link href="<%= FAVICON %>" rel="apple-touch-icon" />
-
-    <!-- Vendor CSS Files -->
-    <link href="<%= EXTRA %>vendor/aos/aos.css" rel="stylesheet" />
-    <link href="<%= EXTRA %>vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="<%= EXTRA %>vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet" />
-
-    <!-- Canonicals -->
-    <link href="https://avengers-assemble.tech/server-info" rel="canonical">
-    <link href="https://avengers-assemble.tech/musics_dj" rel="canonical">
-    <link href="https://avengers-assemble.tech/avenger" rel="canonical">
-    <link href="https://avengers-assemble.tech/staff/application" rel="canonical">
-    <link href="https://avengers-assemble.tech/musics_dj/commands" rel="canonical">
-    <link href="https://avengers-assemble.tech/avenger/commands" rel="canonical">
-
-    <!-- Template Main CSS File -->
-    <link href="<%= EXTRA %>stylesheets/style.css" rel="stylesheet">
-</head>
-
-<body>
-
-    <section id="hero" style="background: url(../img/submit.webp); background-size: 100%;">
-        <div class="hero-container" data-aos="zoom-in" data-aos-delay="100">
-            <h1>
-                <%= HEADING %>
-            </h1>
-            <a href="<%= HOME_LINK %>" class="btn-get-started">
-                <%= HOME %>
-            </a>
-        </div>
-    </section>
-    <!-- Vendor JS Files -->
-<script src="<%= EXTRA %>vendor/aos/aos.js"></script>
-
-<!-- Template Main JS File -->
-<script src="<%= EXTRA %>scripts/index.js"></script>
-
-<!-- CDN Links for React usage -->
-<script crossorigin src="https://unpkg.com/react@17/umd/react.production.min.js"></script>
-<script crossorigin src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
-
-</body>
-
-</html>
+			<%- include('Connections/Footer') %>

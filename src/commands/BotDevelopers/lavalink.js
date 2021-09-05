@@ -4,11 +4,11 @@ const { MessageEmbed } = require('discord.js'),
 module.exports = class Lavalink extends Command {
 	constructor(bot) {
 		super(bot, {
-			'name': 'lavalink',
+			name: 'lavalink',
 			dirname: __dirname,
 			aliases: ['l'],
 			botPermissions: ['SEND_MESSAGES', 'EMBED_LINKS'],
-			description: 'Send the Public Lavalink Deatiles',
+			description: 'Send the Public Lavalink Details',
 			usage: 'lavalink',
 			cooldown: 2000,
 		});
@@ -28,11 +28,11 @@ module.exports = class Lavalink extends Command {
 
 			message.channel.send(new MessageEmbed()
 				.setAuthor(message.author.tag, message.author.displayAvatarURL({ dynamic: true }))
-				.setDescription('These are two Server Lavalink Deatiles ')
+				.setDescription('These are two Server Lavalink Details ')
 				.addField('Lavalink 1', '```Host : n12.danbot.host,\nPort : 1423,\nPassword : bHkddM9ADnx73Q$^%KZF```')
 				.addField('Lavalink 2', '```Host : n12.danbot.host,\nPort : 1149,\nPassword : yL5#S^+9bAAN%Wc#b9&B```')
 				.addField('Lavalink 3', '```Host : n12.danbot.host,\nPort : 1244,\nPassword : ^*4nXHRr7vnT=g#?dqjv```')
-				.addField('Lavalink 3', '```Host : n12.danbot.host,\nPort : 1133,\nPassword : #4nM?en%wUdhEr#2xL%c```'),
+				.addField('Lavalink 4', '```Host : n12.danbot.host,\nPort : 1133,\nPassword : #4nM?en%wUdhEr#2xL%c```'),
 			).then(m => m.delete({ timeout: 60000 }));
 		}
 	}

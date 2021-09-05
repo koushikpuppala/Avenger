@@ -1,7 +1,8 @@
-module.exports = {
-	Guild: require('./Guild'),
-	User: require('./User'),
-	Message: require('./Message'),
-	TextChannel: require('./TextChannel'),
-	DMChannel: require('./DMChannel'),
+module.exports = (bot) => {
+	DiscordStrategy = require('./DiscordStrategy')(bot),
+	Guild = require('./Guild'),
+	User = require('./User'),
+	Message = require('./Message'),
+	TextChannel = require('./TextChannel'),
+	DMChannel = require('./DMChannel')
 };

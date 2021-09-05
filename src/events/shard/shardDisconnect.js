@@ -1,15 +1,30 @@
-// Dependencies
-const Event = require('../../structures/Event');
+/** @format */
 
-module.exports = class shardDisconnect extends Event {
+// Dependencies
+const Event = require('../../structures/Event')
+
+/**
+ * Shard disconnect event
+ * @event Avenger#ShardDisconnect
+ * @extends {Event}
+ */
+class ShardDisconnect extends Event {
 	constructor(...args) {
 		super(...args, {
 			dirname: __dirname,
-		});
+		})
 	}
 
-	// run event
+	/**
+	 * Function for receiving event.
+	 * @param {bot} bot The instantiating client
+	 * @param {CloseEvent} event The WebSocket close event
+	 * @param {number} shardID The shard id that disconnected
+	 * @readonly
+	 */
 	async run(bot, event, shardID) {
-		bot.logger.error(`Shard: ${shardID} disconnected with error: ${event.reason}`);
+		bot.logger.error(`Shard: ${shardID} disconnected with error: ${event.reason}`)
 	}
-};
+}
+
+module.exports = ShardDisconnect

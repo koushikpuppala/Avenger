@@ -22,7 +22,7 @@ module.exports = class Calc extends Command {
 			const calculation = math.evaluate(message.args.join(' '));
 
 			const embed = new MessageEmbed(message)
-				.setTitle('Maths Calaculation')
+				.setTitle('Maths Calculation')
 				.addField(
 					'INPUT :',
 					`\`\`\`js\n${message.args.join(' ')}\`\`\``,
@@ -32,7 +32,7 @@ module.exports = class Calc extends Command {
 					`\`\`\`js\n${calculation}\`\`\``,
 				);
 
-			message.channel.send(embed);
+			message.channel.send({ embeds: [embed] });
 		} catch (e) {
 			return message.channel.send('It is Invalid to Calculate');
 		}

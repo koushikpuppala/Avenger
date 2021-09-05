@@ -32,6 +32,6 @@ module.exports = class Ascii extends Command {
 					: `${message.author.username} bet on ${member.user.username}!\n ${message.author.username} didn't win the bet`,
 			);
 
-		return message.channel.send(embed);
+		return message.channel.send({ embeds: [embed] });
 	}
 };

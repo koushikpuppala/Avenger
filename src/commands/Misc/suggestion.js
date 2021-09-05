@@ -37,7 +37,7 @@ module.exports = class Suggestion extends Command {
 			.setTimestamp()
 			.setFooter(`${message.author.id}(${message.author.tag})`);
 
-		channel.send(embed).then(async (msg) => {
+		channel.send({ embeds: [embed] }).then(async (msg) => {
 			await msg.react('<a:tick:818394472563605554>');
 			await msg.react('<a:cross:818394472224260118>');
 		});

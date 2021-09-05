@@ -20,6 +20,6 @@ module.exports = class IQ extends Command {
 			.setTitle('IQ_TEST')
 			.setDescription(`Your IQ is: ${iq}`);
 
-		message.channel.send(embed);
+		message.channel.send({ embeds: [embed] });
 	}
 };

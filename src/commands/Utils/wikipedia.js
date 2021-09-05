@@ -32,6 +32,6 @@ module.exports = class Wikipedia extends Command {
 			.setURL(article.content_urls.desktop.page)
 			.setTitle(article.title)
 			.setDescription(article.extract);
-		message.channel.send(embed);
+		message.channel.send({ embeds: [embed] });
 	}
 };

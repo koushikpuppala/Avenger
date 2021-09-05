@@ -1,4 +1,6 @@
-const { Schema, model } = require('mongoose');
+/** @format */
+
+const { Schema, model } = require('mongoose')
 
 const ContactSchema = Schema({
 	UserName: {
@@ -27,6 +29,6 @@ const ContactSchema = Schema({
 		type: String,
 		required: true,
 	},
-});
+})
 
-module.exports = model('Contact', ContactSchema);
+module.exports = model('Contact', ContactSchema)

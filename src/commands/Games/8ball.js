@@ -29,6 +29,6 @@ module.exports = class Ball8 extends Command {
 			.addField('Question:', question)
 			.addField('Answer:', answer);
 
-		message.channel.send(embed);
+		message.channel.send({ embeds: [embed] });
 	}
 };

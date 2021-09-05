@@ -1,0 +1,17 @@
+{
+	"name": "Avengers Assemble | Discord Community, Bots Dashboard",
+	"short_name": "Avengers Assemble",
+	"description": "This is the main page of Server Avengers Assemble which have two major bots Musics_DJ(Discord Verified) and Avenger(Under Discord Verification Process). You can have Lot of friends by joining the server and can share coding and can learn coding.",
+	"icons": [
+	  {
+		"src": "../img/logo.png",
+		"sizes": "512x512",
+		"type": "image/png",
+		"purpose": "any maskable"
+	  }
+	],
+	"start_url": "/",
+	"display": "fullscreen",
+	"theme_color": "rgba(6, 209, 224, 0.25)",
+	"background_color": "rgba(6, 209, 224, 0.25)"
+  }

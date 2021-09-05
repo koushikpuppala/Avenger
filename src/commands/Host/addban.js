@@ -47,7 +47,7 @@ module.exports = class Addban extends Command {
 					.setColor(15158332)
 					.setAuthor(`${user.tag} has been globally banned`)
 					.setDescription(`**Reason:** ${reason}\n**Restriction:** ${restriction}`);
-				message.channel.send(embed).then(m => m.delete({ timeout: 30000 }));
+				message.channel.send({ embeds: [embed] }).then(m => m.delete({ timeout: 30000 }));
 			} else {
 				message.channel.send('User is already banned.');
 			}

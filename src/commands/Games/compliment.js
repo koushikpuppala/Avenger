@@ -24,6 +24,6 @@ module.exports = class Compliment extends Command {
 			.setTitle('COMPLIMENT')
 			.setDescription(compliment);
 
-		message.channel.send(embed);
+		message.channel.send({ embeds: [embed] });
 	}
 };

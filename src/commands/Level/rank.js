@@ -1,73 +1,157 @@
+/** @format */
+
 // Dependencies
 const { MessageAttachment } = require('discord.js'),
-	{ RankSchema } = require('../../database/models'),
 	{ Rank: rank } = require('canvacord'),
-	Command = require('../../structures/Command.js');
+	Command = require('../../structures/Command.js')
 
-module.exports = class Rank extends Command {
+/**
+ * Rank command
+ * @extends {Command}
+ */
+class Rank extends Command {
+	/**
+	 * @param {Client} client The instantiating client
+	 * @param {CommandData} data The data for the command
+	 */
 	constructor(bot) {
 		super(bot, {
 			name: 'rank',
 			guildOnly: true,
 			dirname: __dirname,
 			aliases: ['lvl', 'level'],
-			botPermissions: [ 'SEND_MESSAGES', 'EMBED_LINKS', 'ATTACH_FILES'],
+			botPermissions: ['SEND_MESSAGES', 'EMBED_LINKS', 'ATTACH_FILES'],
 			description: 'Shows your rank/Level.',
 			usage: 'level [username]',
 			cooldown: 3000,
 			examples: ['level userID', 'level @mention', 'level username'],
-		});
+			slash: true,
+			options: [
+				{
+					name: 'user',
+					description: 'The user you want to view the rank of.',
+					type: 'USER',
+					required: false,
+				},
+			],
+		})
 	}
 
-	// Run command
+	/**
+	 * Function for receiving message.
+	 * @param {bot} bot The instantiating client
+	 * @param {message} message The message that ran the command
+	 * @readonly
+	 */
 	async run(bot, message) {
 		// Get user
-		const members = await message.getMember();
+		const members = await message.getMember()
 
 		// send 'waiting' message to show bot has recieved message
-		const msg = await message.channel.send(message.translate('misc:FETCHING', {
-			EMOJI: message.checkEmoji() ? bot.customEmojis['loading'] : '', ITEM: this.help.name }), { tts: true });
+		const msg = await message.channel.send(
+			message.translate('misc:FETCHING', {
+				EMOJI: message.channel.checkPerm('USE_EXTERNAL_EMOJIS')
+					? bot.customEmojis['loading']
+					: '',
+				ITEM: this.help.name,
+			})
+		)
 
 		// Retrieve Rank from databse
 		try {
-			RankSchema.find({
-				guildID: message.guild.id,
-			}).sort([
-				['user', 'descending'],
-			]).exec((err, res) => {
-				const user = res.find(doc => doc.userID == members[0].user.id);
-				// if they haven't send any messages
-				if (!user) {
-					msg.delete();
-					return message.channel.error('level/rank:NO_MESSAGES');
-				}
-				let rankScore;
-				for (let i = 0; i < res.length; i++) {
-					if (res[i].userID == members[0].user.id) rankScore = i;
-				}
-				// create rank card
-				const rankcard = new rank()
-					.setAvatar(members[0].user.displayAvatarURL({ format: 'png', dynamic: true, size: 1024 }))
-					.setCurrentXP(user.Level == 1 ? user.Xp : (user.Xp - (5 * ((user.Level - 1) ** 2) + 50 * (user.Level - 1) + 100)))
-					.setLevel(user.Level)
-					.setRank(rankScore + 1)
-					.setRequiredXP((5 * (user.Level ** 2) + 50 * user.Level + 100) - (5 * ((user.Level - 1) ** 2) + 50 * (user.Level - 1) + 100))
-					.setStatus(members[0].presence.status)
-					.setProgressBar(['#FFFFFF', '#DF1414'], 'GRADIENT')
-					.setUsername(members[0].user.username)
-					.setDiscriminator(members[0].user.discriminator);
-				// send rank card
-				rankcard.build().then(buffer => {
-					const attachment = new MessageAttachment(buffer, 'RankCard.png');
-					msg.delete();
-					message.channel.send(attachment);
-				});
-
-			});
+			const res = await this.createRankCard(bot, message.guild, members[0], message.channel)
+			msg.delete()
+			if (typeof res == 'object' && !res.description) {
+				await message.channel.send({ files: [res] })
+			} else if (res.description) {
+				await message.channel.send({ embeds: [res] })
+			} else {
+				await message.channel.send(res)
+			}
 		} catch (err) {
-			bot.logger.error(`Command: '${this.help.name}' has error: ${err.message}.`);
-			msg.delete();
-			message.channel.error('misc:ERROR_MESSAGE', { ERROR: err.message }).then(m => m.delete({ timeout: 5000 }));
+			bot.logger.error(`Command: '${this.help.name}' has error: ${err.message}.`)
+			message.channel
+				.error('misc:ERROR_MESSAGE', { ERROR: err.message })
+				.then((m) => m.timedDelete({ timeout: 5000 }))
 		}
 	}
-};
+
+	/**
+	 * Function for receiving interaction.
+	 * @param {bot} bot The instantiating client
+	 * @param {interaction} interaction The interaction that ran the command
+	 * @param {guild} guild The guild the interaction ran in
+	 * @param {args} args The options provided in the command, if any
+	 * @readonly
+	 */
+	async callback(bot, interaction, guild, args) {
+		const channel = guild.channels.cache.get(interaction.channelId),
+			member = guild.members.cache.get(args.get('user')?.value) ?? interaction.member
+
+		// Retrieve Rank from databse
+		try {
+			const res = await this.createRankCard(bot, guild, member, channel)
+			if (typeof res == 'object') {
+				await interaction.reply({ files: [res] })
+			} else {
+				await interaction.reply({ content: res })
+			}
+		} catch (err) {
+			bot.logger.error(`Command: '${this.help.name}' has error: ${err.message}.`)
+			return interaction.reply({
+				ephemeral: true,
+				embeds: [channel.error('misc:ERROR_MESSAGE', { ERROR: err.message }, true)],
+			})
+		}
+	}
+
+	/**
+	 * Function for fetching meme embed.
+	 * @param {bot} bot The instantiating client
+	 * @param {guild} guild The guild the command ran in
+	 * @param {member} guildMember The settings of the guild
+	 * @param {channel} channel The channel the command ran in
+	 * @returns {embed}
+	 */
+	async createRankCard(bot, guild, member, channel) {
+		const res = guild.levels.sort(({ Xp: a }, { Xp: b }) => b - a)
+
+		const user = res.find((doc) => doc.userID == member.user.id)
+		// if they haven't send any messages
+		if (!user) return channel.error('level/rank:NO_MESSAGES', { ERROR: null }, true)
+
+		let rankScore
+		for (let i = 0; i < res.length; i++) {
+			if (res[i].userID == member.user.id) rankScore = i
+		}
+
+		// create rank card
+		const rankcard = new rank()
+			.setAvatar(member.user.displayAvatarURL({ format: 'png', dynamic: true, size: 1024 }))
+			.setCurrentXP(
+				user.Level == 1
+					? user.Xp
+					: user.Xp - (5 * (user.Level - 1) ** 2 + 50 * (user.Level - 1) + 100)
+			)
+			.setLevel(user.Level)
+			.setRank(rankScore + 1)
+			.setRequiredXP(
+				5 * user.Level ** 2 +
+					50 * user.Level +
+					100 -
+					(user.Level == 1 ? 0 : 5 * (user.Level - 1) ** 2 + 50 * (user.Level - 1) + 100)
+			)
+			.setStatus(member.presence?.status ?? 'dnd')
+			.setProgressBar(['#FFFFFF', '#DF1414'], 'GRADIENT')
+			.setUsername(member.user.username)
+			.setDiscriminator(member.user.discriminator)
+		if (member.user.rankImage && member.user.premium)
+			rankcard.setBackground('IMAGE', member.user.rankImage)
+
+		// create rank card
+		const buffer = await rankcard.build()
+		return new MessageAttachment(buffer, 'RankCard.png')
+	}
+}
+
+module.exports = Rank
